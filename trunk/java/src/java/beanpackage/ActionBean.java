@@ -19,7 +19,7 @@ public class ActionBean {
     private int rating;
 
     private List<Show> listOfShows;
-    private Handler handler;
+    private ConnectionManager handler;
 
 
     // Block of getters & setters
@@ -89,7 +89,7 @@ public class ActionBean {
     public int authorization()
     {
         listOfShows = null;
-        handler = new Handler();
+        handler = new ConnectionManager();
         status = handler.getAuthorization(login, password);
         return status;
     }
