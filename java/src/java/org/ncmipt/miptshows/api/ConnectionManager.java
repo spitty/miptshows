@@ -1,4 +1,4 @@
-package org.ncmipt.miptshows;
+package org.ncmipt.miptshows.api;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -26,9 +26,9 @@ import org.apache.http.message.BasicNameValuePair;
 
 public class ConnectionManager {
 
-    private final String HOST = "http://api.myshows.ru/profile/";
-    private final String LOGIN = "login?";
-    private final String SHOWS = "shows/";
+    private static final String HOST = "http://api.myshows.ru/profile/";
+    private static final String LOGIN = "login?";
+    private static final String SHOWS = "shows/";
 
     private HttpClient httpClient;
 
@@ -101,12 +101,12 @@ public class ConnectionManager {
     public String getListOfShows ()
     {
         HttpPost httpPost = new HttpPost(HOST + SHOWS);
-        StringBuilder sb = null;
+        StringBuilder sb = new StringBuilder("");
         try
         {
             HttpResponse response = httpClient.execute(httpPost);
             Scanner scanner = new Scanner(response.getEntity().getContent(), "UTF-8");
-            sb = new StringBuilder();
+            //sb = new StringBuilder();
             while (scanner.hasNextLine())
             {
                 sb.append(scanner.nextLine());
