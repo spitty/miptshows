@@ -1,4 +1,4 @@
-package org.ncmipt.miptshows;
+package org.ncmipt.miptshows.smb;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
