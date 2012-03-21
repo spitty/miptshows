@@ -4,7 +4,7 @@
  */
 package testing;
 
-import org.ncmipt.miptshows.JcifsController;
+import org.ncmipt.miptshows.smb.JcifsController;
 import com.sun.net.httpserver.HttpServer;
 import java.util.List;
 import jcifs.smb.SmbFile;

@@ -1,5 +1,8 @@
 package org.ncmipt.miptshows;
 
+import org.ncmipt.miptshows.api.Show;
+import org.ncmipt.miptshows.api.ConnectionManager;
+import org.ncmipt.miptshows.api.JsonConverter;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
