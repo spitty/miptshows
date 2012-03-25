@@ -1,7 +1,6 @@
 package org.ncmipt.miptshows.api;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -11,10 +10,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
@@ -62,34 +62,29 @@ public class ConnectionManager {
     public int getAuthorization(String login, String password)
     {
         httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager());
-        HttpPost httpPost = new HttpPost(HOST + LOGIN);
+        HttpUriRequest httpRequest = null;
         HttpResponse response = null;
         try
         {
-            password = this.getMd5code(password);
+            password = getMd5code(password);
 
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+            List<NameValuePair> nameValuePairs = new ArrayList<>(2);
             nameValuePairs.add(new BasicNameValuePair("login", login));
             nameValuePairs.add(new BasicNameValuePair("password", password));
-            httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-            response = httpClient.execute(httpPost);
-
-        } catch (ClientProtocolException ex)
+            
+            httpRequest = new HttpGet(HOST + LOGIN + URLEncodedUtils.format(nameValuePairs, "UTF-8"));
+            response = httpClient.execute(httpRequest);
+        }
+        catch (NoSuchAlgorithmException ex)
         {
             Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedEncodingException ex)
-        {
-            Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex)
-        {
-            Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchAlgorithmException ex)
+        }
+        catch (IOException ex)
         {
             Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        System.out.println("request line:   " + httpPost.getRequestLine());
+        System.out.println("request line:   " + httpRequest.getRequestLine());
         return response.getStatusLine().getStatusCode();
     }
 
