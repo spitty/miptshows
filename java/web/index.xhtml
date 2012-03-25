@@ -12,13 +12,14 @@
             <p:panel header="MiptShows" footer="Please, enter your login and password from &lt;strong&gt; myshows.ru&lt;/strong&qt; into fields" >
                 <p:panelGrid columns="2" >
                     <h:outputText value="login*"/>
-                    <p:inputText value="#{actionBean.login}"/>
+                    <p:inputText value="#{actionBean.login}" required="true"/>
 
                     <h:outputText value="password*"/>
-                    <p:inputText value="#{actionBean.password}" type="password" />
+                    <p:inputText value="#{actionBean.password}" type="password" required="true"/>
                 </p:panelGrid>
             </p:panel>
-            <h:commandButton  value="next" action="actions" actionListener="#{actionBean.authorization()}"/>
+            <h:commandButton id="goNext" value="next" action="#{actionBean.authorization()}"/>
+            <h:messages for="goNext"/>
         </h:form>
     </h:body>
 </html>
