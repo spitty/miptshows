@@ -4,8 +4,10 @@ import org.ncmipt.miptshows.api.Show;
 import org.ncmipt.miptshows.api.ConnectionManager;
 import org.ncmipt.miptshows.api.JsonConverter;
 import java.util.List;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -89,12 +91,24 @@ public class ActionBean {
      *
      * @return
      */
-    public int authorization()
+    public String authorization()
     {
         listOfShows = null;
         handler = new ConnectionManager();
         status = handler.getAuthorization(login, password);
-        return status;
+        String redirectTo;
+        if(status == 200)
+        {
+            redirectTo = "actions";
+        }
+        else
+        {
+            FacesMessage fm = new FacesMessage("Authorization fails");
+            FacesContext.getCurrentInstance().addMessage("Authorization fails", fm);
+            redirectTo = "";
+        }
+        
+        return redirectTo;
     }
 
     /**
