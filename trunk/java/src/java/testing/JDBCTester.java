@@ -24,14 +24,37 @@ public class JDBCTester
             conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1522/orcl", "vlad", "vlad");
 
             Statement stat = conn.createStatement();
-            ResultSet result = stat.executeQuery("select * from dual");
+            ResultSet result = stat.executeQuery("select * from temp_data");
             while (result.next())
             {
-                System.out.println(result.getString(1));
+                System.out.println(result.getInt(3));
             }
-
             result.close();
             stat.close();
+
+/*
+            PreparedStatement pstat = conn.prepareStatement("INSERT INTO temp_data "
+                    + "(file_name, folder_name, file_size, server) VALUES (?, ?, ?, ?)");
+
+            pstat.setString(1, "file.vasya");
+            pstat.setString(2, "fold.er_vasya");
+            pstat.setInt(3, 1024);
+            pstat.setString(4, "campus.vasya");
+            pstat.addBatch();
+
+            
+            pstat.setString(1, "vl.ad");
+            pstat.setString(2, "ro.ma");
+            pstat.setInt(3, 124);
+            pstat.setString(4, "vo.da");
+            pstat.addBatch();
+            
+            
+            pstat.executeBatch();
+            conn.commit();
+*/            
+
+            
             conn.close();
         } catch (SQLException ex)
         {

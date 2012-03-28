@@ -68,7 +68,7 @@ public class ConnectionManager {
         {
             password = getMd5code(password);
 
-            List<NameValuePair> nameValuePairs = new ArrayList<>(2);
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
             nameValuePairs.add(new BasicNameValuePair("login", login));
             nameValuePairs.add(new BasicNameValuePair("password", password));
             
