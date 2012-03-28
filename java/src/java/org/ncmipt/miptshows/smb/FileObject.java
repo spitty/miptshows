@@ -14,8 +14,8 @@ public class FileObject {
     {
         this.name = name;
         this.folder = folder;
+        this.server = server;   
         this.size = size;
-        this.server = server;
     }
 
     

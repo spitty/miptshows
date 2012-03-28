@@ -71,7 +71,7 @@ public class JcifsController
 
             if(smbFile.isFile())
             {
-                //TODO: check if getParent return exactly what we want
+                
                 handler.onFileFound(new FileObject(smbFile.getName(), smbFile.getParent(), smbFile.getServer(), smbFile.getContentLength()));
             }
             else if(smbFile.isDirectory())
@@ -177,7 +177,11 @@ public class JcifsController
      */
     public static void main(String[] args) throws MalformedURLException
     {
-        SmbFile sf = new SmbFile("smb://natalie.campus/incoming/! For/717/");
+        SmbFile sf = new SmbFile("smb://natalie.campus/incoming/! For/917/");
+//        System.out.println(sf.getPath());
+//        System.out.println(sf.getCanonicalPath());
+//        System.out.println(sf.getParent());
+        
         JcifsController.scanFolder(sf, new FileFindHandler()
         {
 
