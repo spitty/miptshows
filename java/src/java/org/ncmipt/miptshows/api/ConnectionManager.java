@@ -113,4 +113,24 @@ public class ConnectionManager {
 
         return sb.toString();
     }
+    
+    public String getUserInfo()
+    {
+        HttpPost httpPost = new HttpPost(HOST );
+        StringBuilder sb = new StringBuilder("");
+        try
+        {
+            HttpResponse response = httpClient.execute(httpPost);
+            Scanner scanner = new Scanner(response.getEntity().getContent(), "UTF-8");
+            //sb = new StringBuilder();
+            while (scanner.hasNextLine())
+            {
+                sb.append(scanner.nextLine());
+            }
+        } catch (IOException ex)
+        {
+            Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sb.toString();
+    }
 }

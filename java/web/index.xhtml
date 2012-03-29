@@ -5,22 +5,27 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
-        <title>Facelet Title</title>
+        <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/resources/images/favicon.ico"/>
+        <title>Welcome to MiptShows</title>
+        <h:outputStylesheet library="css" name="miptshows.css"/>
     </h:head>
-    <h:body>
-        <h:form>
+    <h:body>    
+        <h:form styleClass="auth_form">
+            <h:graphicImage library="images" name="tv.png" styleClass="tv_img" />
             <p:panel header="MiptShows" footer="Please, enter your login and password from &lt;strong&gt; myshows.ru&lt;/strong&qt; into fields" >
                 <p:panelGrid columns="2" >
-                    <h:outputText value="login*"/>
+                    <h:outputText value="Login:*" styleClass="labels" />
                     <p:inputText value="#{actionBean.login}" required="true"/>
 
-                    <h:outputText value="password*"/>
+                    <h:outputText value="Password:*" styleClass="labels"/>
                     <p:inputText value="#{actionBean.password}" type="password" required="true"/>
                 </p:panelGrid>
             </p:panel>
-            <h:commandButton id="goNext" value="next" action="#{actionBean.authorization()}"/>
-            <h:messages for="goNext"/>
+            <h:commandButton id="goNext" value="next" action="#{actionBean.authorization()}" styleClass="next_but"/>
+            <h:messages for="goNext">
+            </h:messages>
         </h:form>
+        <h:outputLink value="http://myshows.ru/login/remind" title="Забыли пароль?" target="_blank" styleClass="forget_pass_a">Забыли пароль?</h:outputLink>
     </h:body>
 </html>
 
