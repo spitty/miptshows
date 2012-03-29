@@ -22,12 +22,22 @@ public class ActionBean {
     private String password = "";
     private int status;
     private int rating;
-
+    private String user ="";
     private List<Show> listOfShows;
     private ConnectionManager handler;
 
 
     // Block of getters & setters
+    public String getUser()
+    {
+        return user;
+    }
+
+    public void setUser(String user)
+    {
+        this.user = user;
+    }
+    
     public String getLogin() {
         return login;
     }
@@ -99,7 +109,7 @@ public class ActionBean {
         String redirectTo;
         if(status == 200)
         {
-            redirectTo = "actions";
+            redirectTo = "actions.xhtml";
         }
         else
         {
@@ -120,5 +130,9 @@ public class ActionBean {
         response = handler.getListOfShows();
         listOfShows = JsonConverter.mapToShows(response);
         return listOfShows;
+    }
+    public String userInfo(){
+        user = handler.getUserInfo();
+        return user;
     }
 }

@@ -1,17 +1,28 @@
+/*ignore tables or sequence doesn't exist Exception*/
 
-DROP TABLE files;
+begin execute immediate 'DROP TABLE files CASCADE CONSTRAINTS PURGE';
+exception when others then if sqlcode = -00942 then null; else raise; end if; end;
+/
+begin execute immediate 'DROP TABLE folders CASCADE CONSTRAINTS PURGE';
+exception when others then if sqlcode = -00942 then null; else raise; end if; end;
+/
+begin execute immediate 'DROP TABLE files2folders CASCADE CONSTRAINTS PURGE';
+exception when others then if sqlcode = -00942 then null; else raise; end if; end;
+/
+begin execute immediate 'DROP TABLE servers CASCADE CONSTRAINTS PURGE';
+exception when others then if sqlcode = -00942 then null; else raise; end if; end;
+/
+begin execute immediate 'DROP TABLE tempdata CASCADE CONSTRAINTS PURGE';
+exception when others then if sqlcode = -00942 then null; else raise; end if; end;
+/
+begin execute immediate 'DROP SEQUENCE file_id_generator';
+exception when others then if sqlcode = -02289 then null; else raise; end if; end;
+/
+begin execute immediate 'DROP SEQUENCE folder_id_generator';
+exception when others then if sqlcode = -02289 then null; else raise; end if; end;
+/
+/* end of ignoring procedure */
 
-DROP TABLE folders;
-
-DROP TABLE file2folders;
-
-DROP TABLE servers;
-
-DROP TABLE temp_data;
-
-DROP SEQUENCE file_id_generator;
-
-DROP SEQUENCE folder_id_generator;
 
 CREATE TABLE files 
 (
@@ -28,13 +39,13 @@ CREATE TABLE folders (
     CONSTRAINT folder_pk PRIMARY KEY(folder_id)  
 );
 
-CREATE TABLE file2folders 
+CREATE TABLE files2folders 
 (
     file_id NUMBER(15) not null,
     folder_id NUMBER(15) not null,
     CONSTRAINT file_fk FOREIGN KEY(file_id) REFERENCES files(file_id),
     CONSTRAINT folder_fk FOREIGN KEY(folder_id) REFERENCES folders(folder_id),
-    CONSTRAINT file2folder_pk PRIMARY KEY(file_id, folder_id)  
+    CONSTRAINT files2folder_pk PRIMARY KEY(file_id, folder_id)  
 );
 
 
