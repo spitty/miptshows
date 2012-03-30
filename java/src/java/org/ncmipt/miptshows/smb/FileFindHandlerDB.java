@@ -9,19 +9,18 @@ import org.ncmipt.miptshows.util.DBUtils;
  */
 public class FileFindHandlerDB implements FileFindHandler
 {
-    private static final int INSERTION_MAX = 100;
+    private static final int INSERTION_MAX = 1000;
 
-    private DBUtils dbutils;
-    private int insertionCounter;
+    private DBUtils dbUtils;
+    private int insertionCounter = 0;
 
     /**
      *
+     * @param dbUtils
      */
-    public FileFindHandlerDB()
+    public FileFindHandlerDB(DBUtils dbUtils)
     {
-        dbutils = new DBUtils();
-        dbutils.connect();
-        dbutils.createStatement();
+        this.dbUtils = dbUtils;
         insertionCounter = 0;
     }
 
@@ -30,11 +29,11 @@ public class FileFindHandlerDB implements FileFindHandler
     {
         if (insertionCounter < INSERTION_MAX)
         {
-            dbutils.executeInsert(file.getName(), file.getFolder(),
+            dbUtils.executeInsert(file.getName(), file.getFolder(),
                     file.getSize(), file.getServer());
             insertionCounter++;
         } else {
-            dbutils.executeInsert();
+            dbUtils.flush();
             insertionCounter = 0;
         }
     }
@@ -46,7 +45,7 @@ public class FileFindHandlerDB implements FileFindHandler
      */
     public void endInsert()
     {
-        dbutils.executeInsert();
+        dbUtils.flush();
         insertionCounter = 0;
     }
 }
