@@ -6,11 +6,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.ncmipt.miptshows.smb.FileObject;
 
 /**
  *
@@ -43,7 +41,7 @@ public class DBUtils implements Closeable
     }
 
     /**
-     * 
+     *
      */
     public void createStatement()
     {
@@ -58,11 +56,11 @@ public class DBUtils implements Closeable
     }
 
     /**
-     * 
+     *
      * @param fileName
      * @param folderName
      * @param fileSize
-     * @param server 
+     * @param server
      */
     public void executeInsert(String fileName, String folderName, int fileSize, String server)
     {
@@ -72,19 +70,19 @@ public class DBUtils implements Closeable
             pstatInsert.setString(1, folderName);
             pstatInsert.setInt(1, fileSize);
             pstatInsert.setString(1, server);
-            
+
             pstatInsert.addBatch();
-            
+
         } catch (SQLException ex)
         {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
-     * 
+     *
      */
-    public void executeInsert() 
+    public void executeInsert()
     {
         try
         {
@@ -94,53 +92,67 @@ public class DBUtils implements Closeable
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
-     * 
-     * @param query 
+     *
+     * @param query
      */
     public void executeUpdate(String query)
     {
         try
         {
-            conn.createStatement().executeUpdate(query);
+            Statement stat = conn.createStatement();
+            stat.executeUpdate(query);
+            stat.close();
         } catch (SQLException ex)
         {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-    }
-        
-    /**
-     * 
-     * @param query 
-     */
-    public List<FileObject> executeQuery(String query)
-    {
-        ArrayList list = new ArrayList();
-        FileObject file;
-        
-        try
-        {
-            ResultSet result = conn.createStatement().executeQuery(query);
-            while (result.next()) 
-            {
-                file = new FileObject(result.getString(1), result.getString(2), 
-                        result.getString(3), result.getInt(4));
-                list.add(file);
-            }
-        } catch (SQLException ex)
-        {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return list;
+
     }
 
-    
+    /**
+     *
+     * @param query
+     * @return
+     */
+    public ResultSet executeQuery(String query)
+    {
+        ResultSet result = null;
+        try
+        {
+            Statement stat = conn.createStatement();
+            result = stat.executeQuery(query);
+            stat.close();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return result;
+    }
+
+    /**
+     *
+     * @param query
+     */
+    public void execute(String query)
+    {
+        try
+        {
+            Statement stat = conn.createStatement();
+            stat.execute(query);
+            stat.close();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     @Override
     public void close()
     {
         IOTools.close(conn);
     }
 }
+
