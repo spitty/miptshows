@@ -9,9 +9,10 @@
          <h:outputStylesheet library="css" name="act_style.css"/>
     </h:head>
     <h:body>
+        <h:outputText value="#{actionBean.greeting()}" styleClass="hello_text"></h:outputText>
         <h:form styleClass="act_show_view1">
             <p:panel header="MiptShows">
-                <h:outputText value="#{actionBean.status}"/>
+                <!--<h:outputText value="# {actionBean.status}"/>-->
                 <p:commandButton value="View shows" actionListener="#{actionBean.viewListOfShows()}" update="listOFshows"/>
                 <p:commandButton value="View shows 2" update="list2"/>
             </p:panel>
@@ -58,7 +59,11 @@
         </h:form>
         <h:form>
             <h:commandButton action="#{actionBean.userInfo()}" value="userinfo"/>
-            <h:outputText value="#{actionBean.user}"/>
+            <h:outputText value="#{actionBean.userInfo}"/>
+            <h:commandButton action="#{actionBean.showTopAllShows()}" value="topAllShows"/>
+            <h:outputText value="#{actionBean.topOfShows}"/>
+            <h:commandButton action="#{actionBean.getListOfViewedSeries()}" value="ViewedSeries"/>
+            <h:outputText value="#{actionBean.viewedSeries}"/>
         </h:form>
     </h:body>
 </html>

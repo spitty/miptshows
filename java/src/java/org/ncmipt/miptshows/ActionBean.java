@@ -8,6 +8,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import org.apache.log4j.LogManager;
 
 /**
  *
@@ -15,50 +16,70 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean
 @SessionScoped
-public class ActionBean {
+public class ActionBean
+{
 
+    //I suppose logger shouldn't be final. If we make Logger final we won't be able to add and change properties.
+    private static org.apache.log4j.Logger LOG = LogManager.getLogger(ActionBean.class);
     private String response;
     private String login = "";
     private String password = "";
-    private int status;
-    private int rating;
-    private String user ="";
+    private int status = 0;
+    private int rating = 0;
+    private String userInfo = "";
+    private String topOfShows = "";
+    private String viewedSeries = "";
     private List<Show> listOfShows;
     private ConnectionManager handler;
 
-
     // Block of getters & setters
-    public String getUser()
+    public String getTopOfShows()
     {
-        return user;
+        return topOfShows;
     }
 
-    public void setUser(String user)
+    public void setTopOfShows(String topOfShows)
     {
-        this.user = user;
+        this.topOfShows = topOfShows;
     }
-    
-    public String getLogin() {
+
+    public String getUserInfo()
+    {
+        return userInfo;
+    }
+
+    public void setUserInfo(String userInfo)
+    {
+        this.userInfo = userInfo;
+    }
+
+    public String getLogin()
+    {
         return login;
     }
 
-    public void setLogin(String login) {
+    public void setLogin(String login)
+    {
         this.login = login;
     }
 
-    public String getPassword() {
+    public String getPassword()
+    {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(String password)
+    {
         this.password = password;
     }
 
-    public String getResponse() {
+    public String getResponse()
+    {
         return response;
     }
 
-    public void setResponse(String response) {
+    public void setResponse(String response)
+    {
         this.response = response;
     }
 
@@ -91,10 +112,29 @@ public class ActionBean {
     {
         this.rating = rating;
     }
+
+    public String getViewedSeries()
+    {
+        return viewedSeries;
+    }
+
+    public void setViewedSeries(String viewedSeries)
+    {
+        this.viewedSeries = viewedSeries;
+    }
     // End of the block
 
+    public ActionBean()
+    {
+    }
 
-    public ActionBean() {
+    /**
+     * 
+     * @return greeting string
+     */
+    public String greeting()
+    {
+        return "Hi, " + this.login + "!";
     }
 
     /**
@@ -107,17 +147,19 @@ public class ActionBean {
         handler = new ConnectionManager();
         status = handler.getAuthorization(login, password);
         String redirectTo;
-        if(status == 200)
+        if (status == 200)
         {
             redirectTo = "actions.xhtml";
-        }
-        else
+            LOG.debug("Authorization with login: " + login + "  and password: " + password + " succeeded");
+        } else
         {
             FacesMessage fm = new FacesMessage("Authorization fails");
-            FacesContext.getCurrentInstance().addMessage("Authorization fails", fm);
+//            FacesContext.getCurrentInstance().addMessage("Authorization fails", fm);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Authorization failed!", "Try again"));
             redirectTo = "";
+            LOG.debug("Authorization failed");
         }
-        
+
         return redirectTo;
     }
 
@@ -131,8 +173,41 @@ public class ActionBean {
         listOfShows = JsonConverter.mapToShows(response);
         return listOfShows;
     }
-    public String userInfo(){
-        user = handler.getUserInfo();
-        return user;
+
+    /**
+     * 
+     * 
+     * @return 
+     */
+    public String userInfo()
+    {
+        userInfo = handler.getUserInfo(this.login);
+        return userInfo;
+    }
+
+    /** 
+     * This is debug function for getting authorization with 'SpringProjec' login and 'Spring@Project' password. 
+     * Not waste our time for authorization in debugging process;
+     */
+    public void setDefaultAuth()
+    {
+        this.setPassword("spring@Project");
+        this.setLogin("springProject");
+    }
+
+    /**
+     * 
+     */
+    public void showTopAllShows()
+    {
+        topOfShows = handler.showTopAllShows();
+    }
+
+    /**
+     * 
+     */
+    public void getListOfViewedSeries()
+    {
+        viewedSeries = handler.showTopAllShows();
     }
 }

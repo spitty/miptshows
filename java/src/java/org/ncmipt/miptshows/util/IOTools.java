@@ -12,7 +12,7 @@ import org.apache.log4j.LogManager;
 public class IOTools
 {
 
-    private static final org.apache.log4j.Logger LOG = LogManager.getLogger(IOTools.class);
+    private static org.apache.log4j.Logger LOG = LogManager.getLogger(IOTools.class);
 
     /**
      * Private constructor. It prevents one from creating instance of {@link IOTools}

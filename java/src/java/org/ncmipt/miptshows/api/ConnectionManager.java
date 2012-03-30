@@ -6,8 +6,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -18,27 +16,30 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.log4j.LogManager;
 
 /**
  *
  * @author Vlad, Roman
  */
+public class ConnectionManager
+{
 
-public class ConnectionManager {
-
-    private static final String HOST = "http://api.myshows.ru/profile/";
+    private static org.apache.log4j.Logger LOG = LogManager.getLogger(ConnectionManager.class);
+    private static final String HOST = "http://api.myshows.ru/";
+    private static final String PROFILE = "profile/";
     private static final String LOGIN = "login?";
     private static final String SHOWS = "shows/";
-
     private HttpClient httpClient;
 
     /**
+     * getMd5Code convert input String into MD5
      *
-     * @param value
-     * @return MD5-code
-     * @throws NoSuchAlgorithmException
+     * @param value Input String for converting into MD5
+     * @return      MD5 code
+     * @throws      NoSuchAlgorithmException
      */
-    public String getMd5code(String value)
+    public String getMd5Code(String value)
             throws NoSuchAlgorithmException
     {
         MessageDigest md = MessageDigest.getInstance("MD5");
@@ -54,10 +55,13 @@ public class ConnectionManager {
     }
 
     /**
+     * This function make authorization and return code 
+     * which shows is authorization succeed or failed.
+     * Also it creates the single HttpClient
      *
-     * @param login
-     * @param password
-     * @return
+     * @param login    User login for authorization
+     * @param password User password for authorization
+     * @return         Server response status code
      */
     public int getAuthorization(String login, String password)
     {
@@ -66,70 +70,127 @@ public class ConnectionManager {
         HttpResponse response = null;
         try
         {
-            password = getMd5code(password);
+            password = getMd5Code(password);
 
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
             nameValuePairs.add(new BasicNameValuePair("login", login));
             nameValuePairs.add(new BasicNameValuePair("password", password));
-            
-            httpRequest = new HttpGet(HOST + LOGIN + URLEncodedUtils.format(nameValuePairs, "UTF-8"));
-            response = httpClient.execute(httpRequest);
-        }
-        catch (NoSuchAlgorithmException ex)
-        {
-            Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (IOException ex)
-        {
-            Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
-        System.out.println("request line:   " + httpRequest.getRequestLine());
+            httpRequest = new HttpGet(HOST + PROFILE + LOGIN + URLEncodedUtils.format(nameValuePairs, "UTF-8"));
+            response = httpClient.execute(httpRequest);
+        } catch (NoSuchAlgorithmException ex)
+        {
+            LOG.error("Failed make MD5", ex);
+        } catch (IOException ex)
+        {
+            LOG.error("Failed make MD5", ex);
+        }
         return response.getStatusLine().getStatusCode();
     }
 
-
     /**
      *
-     * @return
+     * @return Server response as String
      */
-    public String getListOfShows ()
+    public String getListOfShows()
     {
-        HttpPost httpPost = new HttpPost(HOST + SHOWS);
+        HttpPost httpPost = new HttpPost(HOST + PROFILE + SHOWS);
         StringBuilder sb = new StringBuilder("");
         try
         {
             HttpResponse response = httpClient.execute(httpPost);
             Scanner scanner = new Scanner(response.getEntity().getContent(), "UTF-8");
-            //sb = new StringBuilder();
             while (scanner.hasNextLine())
             {
                 sb.append(scanner.nextLine());
             }
         } catch (IOException ex)
         {
-            Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.error("Failed to create server response", ex);
         }
-
         return sb.toString();
     }
-    
-    public String getUserInfo()
+
+    //try to realize list of existing functions from api.myshows.ru
+    /**
+     * 
+     * @param showNumber
+     * @return 
+     */
+    public String getListOfViewedSeries(int showNumber)
     {
-        HttpPost httpPost = new HttpPost(HOST );
+        HttpPost httpPost = new HttpPost(HOST + PROFILE + showNumber);
         StringBuilder sb = new StringBuilder("");
         try
         {
             HttpResponse response = httpClient.execute(httpPost);
             Scanner scanner = new Scanner(response.getEntity().getContent(), "UTF-8");
-            //sb = new StringBuilder();
             while (scanner.hasNextLine())
             {
                 sb.append(scanner.nextLine());
             }
         } catch (IOException ex)
         {
-            Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.error("Failed to create server response", ex);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * This function sets the value of rate for chosen show
+     * 
+     * @param showNumber Chosen show
+     * @param rate 
+     */
+    public void manageSerialRate(int showNumber, int rate)
+    {
+        String host = HOST + SHOWS + showNumber + "/" + rate + "/";
+        HttpPost httpPost = new HttpPost(host);
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public String showTopAllShows()
+    {
+        HttpPost httpPost = new HttpPost(HOST+ SHOWS +"top/all/");
+        StringBuilder sb = new StringBuilder("");
+        try
+        {
+            HttpResponse response = httpClient.execute(httpPost);
+            Scanner scanner = new Scanner(response.getEntity().getContent(), "UTF-8");
+            while (scanner.hasNextLine())
+            {
+                sb.append(scanner.nextLine());
+            }
+        } catch (IOException ex)
+        {
+            LOG.error("Failed to create server response", ex);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 
+     * @param login
+     * @return 
+     */
+    public String getUserInfo(String login)
+    {
+        HttpPost httpPost = new HttpPost(HOST + PROFILE + login);
+        StringBuilder sb = new StringBuilder("");
+        try
+        {
+            HttpResponse response = httpClient.execute(httpPost);
+            Scanner scanner = new Scanner(response.getEntity().getContent(), "UTF-8");
+            while (scanner.hasNextLine())
+            {
+                sb.append(scanner.nextLine());
+            }
+        } catch (IOException ex)
+        {
+            LOG.error("Failed to create server response", ex);
         }
         return sb.toString();
     }

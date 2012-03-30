@@ -22,10 +22,14 @@
                 </p:panelGrid>
             </p:panel>
             <h:commandButton id="goNext" value="next" action="#{actionBean.authorization()}" styleClass="next_but"/>
-            <h:messages for="goNext">
-            </h:messages>
+
+        </h:form>
+        <h:form>
+            <!--Temporary! for fast authorization-->
+            <h:commandButton value="default auth"  id="default" actionListener="#{actionBean.setDefaultAuth()}"/>
         </h:form>
         <h:outputLink value="http://myshows.ru/login/remind" title="Забыли пароль?" target="_blank" styleClass="forget_pass_a">Забыли пароль?</h:outputLink>
+        <p:messages id="messages" showDetail="true" autoUpdate="true"/>
     </h:body>
 </html>
 
