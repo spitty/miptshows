@@ -18,3 +18,14 @@ body{
 .act_show_view2{
     margin: 0 auto 0 auto;
 }
+.hello_text{
+    font-size: 12px;
+    color: #ff0000;
+}
+.ui-panel{
+    width: 700px;
+    margin: 0 auto 0 auto;
+}
+.ui-datagrid{
+    width: 900px;
+}

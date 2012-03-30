@@ -73,6 +73,7 @@
         </data>
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
             <word>MiptShows</word>
+            <word>Util</word>
             <word>xml</word>
         </spellchecker-wordlist>
     </configuration>
