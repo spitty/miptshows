@@ -1,24 +1,21 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package org.ncmipt.miptshows.smb;
 
 import org.ncmipt.miptshows.util.DBUtils;
 
 /**
  *
- * @author Vlad, Roma
+ * @author Vlad, Roman
  */
 public class FileFindHandlerDB implements FileFindHandler
 {
     private static final int INSERTION_MAX = 100;
-    
+
     private DBUtils dbutils;
     private int insertionCounter;
 
     /**
-     * 
+     *
      */
     public FileFindHandlerDB()
     {
@@ -33,7 +30,7 @@ public class FileFindHandlerDB implements FileFindHandler
     {
         if (insertionCounter < INSERTION_MAX)
         {
-            dbutils.executeInsert(file.getName(), file.getFolder(), 
+            dbutils.executeInsert(file.getName(), file.getFolder(),
                     file.getSize(), file.getServer());
             insertionCounter++;
         } else {
@@ -41,7 +38,7 @@ public class FileFindHandlerDB implements FileFindHandler
             insertionCounter = 0;
         }
     }
-    
+
     /**
      * !!!
      * How should I know, when last insertion? It is temporary method for

@@ -21,6 +21,9 @@ exception when others then if sqlcode = -02289 then null; else raise; end if; en
 begin execute immediate 'DROP SEQUENCE folder_id_generator';
 exception when others then if sqlcode = -02289 then null; else raise; end if; end;
 /
+begin execute immediate 'DROP SEQUENCE server_id_generator';
+exception when others then if sqlcode = -02289 then null; else raise; end if; end;
+/
 /* end of ignoring procedure */
 
 
@@ -59,6 +62,8 @@ CREATE TABLE servers
 CREATE SEQUENCE file_id_generator;
 
 CREATE SEQUENCE folder_id_generator;
+
+CREATE SEQUENCE server_id_generator;
 
 CREATE TABLE temp_data
 (

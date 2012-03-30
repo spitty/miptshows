@@ -20,6 +20,7 @@ public class JcifsController
 {
 
     private static final org.apache.log4j.Logger LOG = LogManager.getLogger(JcifsController.class);
+
     @Deprecated
     private Map<String, String> map = new HashMap<String, String>();
 
@@ -71,7 +72,7 @@ public class JcifsController
 
             if(smbFile.isFile())
             {
-                
+
                 handler.onFileFound(new FileObject(smbFile.getName(), smbFile.getParent(), smbFile.getServer(), smbFile.getContentLength()));
             }
             else if(smbFile.isDirectory())
@@ -181,7 +182,7 @@ public class JcifsController
 //        System.out.println(sf.getPath());
 //        System.out.println(sf.getCanonicalPath());
 //        System.out.println(sf.getParent());
-        
+
         JcifsController.scanFolder(sf, new FileFindHandler()
         {
 
