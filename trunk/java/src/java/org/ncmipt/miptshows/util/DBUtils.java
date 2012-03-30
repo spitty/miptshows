@@ -82,7 +82,7 @@ public class DBUtils implements Closeable
     /**
      *
      */
-    public void executeInsert()
+    public void flush()
     {
         try
         {
