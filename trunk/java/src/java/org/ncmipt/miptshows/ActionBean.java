@@ -8,7 +8,14 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
+import org.apache.http.cookie.ClientCookie;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.cookie.BasicClientCookie2;
 import org.apache.log4j.LogManager;
+import org.ncmipt.miptshows.api.TopShow;
+import org.primefaces.event.RateEvent;
 
 /**
  *
@@ -25,22 +32,22 @@ public class ActionBean
     private String login = "";
     private String password = "";
     private int status = 0;
-    private int rating = 0;
     private String userInfo = "";
-    private String topOfShows = "";
     private String viewedSeries = "";
     private List<Show> listOfShows;
+    private List<TopShow> listOfTopAllShows;
     private ConnectionManager handler;
+    private boolean count;
 
     // Block of getters & setters
-    public String getTopOfShows()
+    public List<TopShow> getListOfTopAllShows()
     {
-        return topOfShows;
+        return listOfTopAllShows;
     }
 
-    public void setTopOfShows(String topOfShows)
+    public void setListOfTopAllShows(List<TopShow> listOfTopAllShows)
     {
-        this.topOfShows = topOfShows;
+        this.listOfTopAllShows = listOfTopAllShows;
     }
 
     public String getUserInfo()
@@ -103,16 +110,6 @@ public class ActionBean
         this.listOfShows = listOfShows;
     }
 
-    public int getRating()
-    {
-        return rating;
-    }
-
-    public void setRating(int rating)
-    {
-        this.rating = rating;
-    }
-
     public String getViewedSeries()
     {
         return viewedSeries;
@@ -122,15 +119,21 @@ public class ActionBean
     {
         this.viewedSeries = viewedSeries;
     }
-    // End of the block
+
+    public void setCount(boolean count)
+    {
+        this.count = count;
+    }
+    // End of the block setters and getters
 
     public ActionBean()
     {
     }
 
     /**
+     * This function make a greeting string using the user's login.
      * 
-     * @return greeting string
+     * @return greeting String
      */
     public String greeting()
     {
@@ -138,8 +141,9 @@ public class ActionBean
     }
 
     /**
-     *
-     * @return
+     * This function trying to do authorization with imputed login and MD5-converted password.
+     * 
+     * @return redirectTo name of the further page
      */
     public String authorization()
     {
@@ -149,29 +153,28 @@ public class ActionBean
         String redirectTo;
         if (status == 200)
         {
-            redirectTo = "actions.xhtml";
+            redirectTo = "actions";
             LOG.debug("Authorization with login: " + login + "  and password: " + password + " succeeded");
         } else
         {
             FacesMessage fm = new FacesMessage("Authorization fails");
-//            FacesContext.getCurrentInstance().addMessage("Authorization fails", fm);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Authorization failed!", "Try again"));
             redirectTo = "";
             LOG.debug("Authorization failed");
         }
-
         return redirectTo;
     }
 
     /**
-     *
-     * @return
+     * This function create list of  shows from JSON, 
+     * obtained from server response and converted by JsonConverter into List
+     * 
+     * @return List<Show>
      */
-    public List<Show> viewListOfShows()
+    public void makeListOfShows()
     {
         response = handler.getListOfShows();
         listOfShows = JsonConverter.mapToShows(response);
-        return listOfShows;
     }
 
     /**
@@ -186,7 +189,7 @@ public class ActionBean
     }
 
     /** 
-     * This is debug function for getting authorization with 'SpringProjec' login and 'Spring@Project' password. 
+     * This is debug function for getting authorization with 'SpringProject' login and 'Spring@Project' password. 
      * Not waste our time for authorization in debugging process;
      */
     public void setDefaultAuth()
@@ -196,18 +199,38 @@ public class ActionBean
     }
 
     /**
+     * This function create a List of TopShows where positions are ordered by rating
      * 
      */
-    public void showTopAllShows()
+    public void makeListOfTopAllShows()
     {
-        topOfShows = handler.showTopAllShows();
+        String json = handler.showTopAllShows();
+        listOfTopAllShows = JsonConverter.mapToTopShows(json);
     }
 
-    /**
+   /**
      * 
+     * @param ShowId 
      */
-    public void getListOfViewedSeries()
+    public void makeListOfViewedSeries(int ShowId)
     {
-        viewedSeries = handler.showTopAllShows();
+        viewedSeries = handler.getListOfViewedSeries(ShowId);
+    }
+
+    
+    public void manageShowRate(RateEvent rateEvent)
+    {
+        String id = rateEvent.getComponent().getId();
+        double rat = ((Double) rateEvent.getRating()).intValue();
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Rate Event", "You rated:" + rat);
+        FacesContext.getCurrentInstance().addMessage(null, message);
+        //handler.manageShowRate(showId, rat);
+    }
+
+    public void doCookies(HttpRequest request, HttpResponse response)
+    {
+        Cookie loginCookie = new BasicClientCookie2("login", login);
+        Cookie passwCookie = new BasicClientCookie2("password", password);
+        //How to add cookies to response?
     }
 }
