@@ -9,7 +9,7 @@ public class Show {
     int watchedEpisodes;
     int totalEpisodes;
     float runtime;
-    float rating;
+    double rating;
     String showId;
     String title;
     String ruTitle;
@@ -27,7 +27,7 @@ public class Show {
         this.image = image;
     }
 
-    public float getRating()
+    public double  getRating()
     {
         return rating;
     }

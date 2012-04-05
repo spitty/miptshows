@@ -114,12 +114,12 @@ public class ConnectionManager
     //try to realize list of existing functions from api.myshows.ru
     /**
      * 
-     * @param showNumber
+     * @param showId
      * @return 
      */
-    public String getListOfViewedSeries(int showNumber)
+    public String getListOfViewedSeries(int showId)
     {
-        HttpPost httpPost = new HttpPost(HOST + PROFILE + showNumber);
+        HttpPost httpPost = new HttpPost(HOST + PROFILE + SHOWS + showId + '/');
         StringBuilder sb = new StringBuilder("");
         try
         {
@@ -135,16 +135,35 @@ public class ConnectionManager
         }
         return sb.toString();
     }
+    
+//     public String mmmSeries(int episode)
+//    {
+//        HttpPost httpPost = new HttpPost(HOST + PROFILE + SHOWS +"3/"+ episode + '/');
+//        StringBuilder sb = new StringBuilder("");
+//        try
+//        {
+//            HttpResponse response = httpClient.execute(httpPost);
+//            Scanner scanner = new Scanner(response.getEntity().getContent(), "UTF-8");
+//            while (scanner.hasNextLine())
+//            {
+//                sb.append(scanner.nextLine());
+//            }
+//        } catch (IOException ex)
+//        {
+//            LOG.error("Failed to create server response", ex);
+//        }
+//        return sb.toString();
+//    }
 
     /**
      * This function sets the value of rate for chosen show
      * 
-     * @param showNumber Chosen show
+     * @param showId Chosen show
      * @param rate 
      */
-    public void manageSerialRate(int showNumber, int rate)
+    public void manageShowRate(int showId, double rate)
     {
-        String host = HOST + SHOWS + showNumber + "/" + rate + "/";
+        String host = HOST + SHOWS + showId + "/" + rate + "/";
         HttpPost httpPost = new HttpPost(host);
     }
 
@@ -154,7 +173,7 @@ public class ConnectionManager
      */
     public String showTopAllShows()
     {
-        HttpPost httpPost = new HttpPost(HOST+ SHOWS +"top/all/");
+        HttpPost httpPost = new HttpPost(HOST + SHOWS + "top/all/");
         StringBuilder sb = new StringBuilder("");
         try
         {

@@ -16,12 +16,23 @@ import java.util.List;
  */
 import java.util.Map;
 import java.util.TreeSet;
+import org.ncmipt.miptshows.api.TopShow;
 public class JsonTester
 {
 
     public static void main(String[] args)
     {
-        String text = "{\"2\":{\"showId\":2,"
+        String text ="[{\"id\":1,"
+                + "\"title\":\"House\","
+                + "\"ruTitle\":\"\\u0414\u043e\u043a\\u0442\\u043e\\u0440 \\u0425\\u0430\\u0443\\u0441\","
+                + "\"status\":\"Final Season\","
+                + "\"year\":2004,"
+                + "\"rating\":4.7692,"
+                + "\"voted\":28861,"
+                + "\"watching\":43586,"
+                + "\"image\":\"http:\\/\\/images.tvrage.com\\/shows\\/4\\/3908.jpg\","
+                + "\"place\":1}]";
+        /*String text = "{\"2\":{\"showId\":2,"
                 + "\"title\":\"The Big Bang Theory\","
                 + "\"ruTitle\":\"\\u0422\\u0435\\u043e\\u0440\\u0438\\u044f \\u0431\\u043e\\u043b\\u044c\\u0448\\u043e\\u0433\\u043e \\u0432\\u0437\\u0440\\u044b\\u0432\\u0430\","
                 + "\"runtime\":22,"
@@ -54,6 +65,8 @@ public class JsonTester
                 + "\"rating\":0,"
                 + "\"image\":\"http:\\/\\/images.tvrage.com\\/shows\\/20\\/19295.jpg\"}}";
 
+         * 
+         */
 
        /* String text = "{\"1\":{\"showId\":2,"
                 + "\"title\":\"The Big Bang Theory\"}}";
@@ -70,15 +83,21 @@ public class JsonTester
                  */
 
         Gson gson = new Gson();
-        Map<String, Show> map = new HashMap<String, Show>();
-        Type typeOfT = new TypeToken<HashMap<String, Show>>(){}.getType();
+        Type typeOfT = new TypeToken<List<TopShow>>(){}.getType();
+        List<TopShow> topList = gson.fromJson(text, typeOfT);
+        System.out.println(topList.get(0).getId());
+        
+        //System.out.println(list.get(0).getId());
+        
+ //       Map<String, Show> map = new HashMap<String, Show>();
+   //     Type typeOfT = new TypeToken<HashMap<String, Show>>(){}.getType();
         //System.out.println(map.containsKey("1"));
-        map = gson.fromJson(text, typeOfT);
+     //   map = gson.fromJson(text, typeOfT);
         //System.out.println(map.get("2"));
-        List list = Arrays.asList(map);// Arrays.asList(map);
-        for(String st: map.keySet()){
-            list.add(map.get(st));
-        }
+       // List list = Arrays.asList(map);// Arrays.asList(map);
+        //for(String st: map.keySet()){
+          //  list.add(map.get(st));
+//        }
         //System.out.println(list.get(1).title);
         //System.out.println(list.get(0));
         //Show show = gson.fromJson(map.get("1"), Show.class);

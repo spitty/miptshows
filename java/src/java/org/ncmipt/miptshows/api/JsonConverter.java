@@ -13,7 +13,12 @@ import java.util.Map;
  * @author Vlad, Roman
  */
 public class JsonConverter {
-
+    
+    /**
+     * 
+     * @param text
+     * @return 
+     */
     public static List<Show> mapToShows(String text){
         Gson gson = new Gson();
         Type typeOfT = new TypeToken<HashMap<String, Show>>(){}.getType();
@@ -26,5 +31,17 @@ public class JsonConverter {
         }
         return list;
     }
-
+    
+    /**
+     * 
+     * @param text
+     * @return 
+     */
+    public static List<TopShow> mapToTopShows(String text)
+    {
+        Gson gson = new Gson();
+        Type typeOfT = new TypeToken<List<TopShow>>(){}.getType();
+        List<TopShow> topList = gson.fromJson(text, typeOfT);
+        return topList;
+    }
 }

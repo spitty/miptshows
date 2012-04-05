@@ -12,24 +12,31 @@
     <h:body>    
         <h:form styleClass="auth_form">
             <h:graphicImage library="images" name="tv.png" styleClass="tv_img" />
-            <p:panel header="MiptShows" footer="Please, enter your login and password from &lt;strong&gt; myshows.ru&lt;/strong&qt; into fields" >
+            <p:panel header="MiptShows" footer="Please, enter your login and password from &lt;strong&gt; myshows.ru&lt;/strong&qt; into fields">
                 <p:panelGrid columns="2" >
                     <h:outputText value="Login:*" styleClass="labels" />
-                    <p:inputText value="#{actionBean.login}" required="true"/>
+                    <p:inputText value="#{actionBean.login}" required="true" id="login"/>
 
                     <h:outputText value="Password:*" styleClass="labels"/>
-                    <p:inputText value="#{actionBean.password}" type="password" required="true"/>
+                    <p:inputText value="#{actionBean.password}" type="password" required="true" id="password"/>
                 </p:panelGrid>
             </p:panel>
             <h:commandButton id="goNext" value="next" action="#{actionBean.authorization()}" styleClass="next_but"/>
-
+            <!--Temporary! for fast authorization-->
+            <h:commandButton value="default auth"  id="default" actionListener="#{actionBean.setDefaultAuth()}">
+                <f:ajax render="login password"/>
+            </h:commandButton>
         </h:form>
         <h:form>
-            <!--Temporary! for fast authorization-->
-            <h:commandButton value="default auth"  id="default" actionListener="#{actionBean.setDefaultAuth()}"/>
+
+
         </h:form>
-        <h:outputLink value="http://myshows.ru/login/remind" title="Забыли пароль?" target="_blank" styleClass="forget_pass_a">Забыли пароль?</h:outputLink>
-        <p:messages id="messages" showDetail="true" autoUpdate="true"/>
+        <h:outputLink value="http://myshows.ru/login/remind" title="Забыли пароль?" target="_blank" styleClass="forget_pass_a">Forgot Password?</h:outputLink>
+        <p:messages id="messages" showDetail="true" autoUpdate="true">
+            <p:effect type="pulsate" event="load" delay="800">  
+                <f:param name="mode" value="'show'" />  
+            </p:effect>  
+        </p:messages>
     </h:body>
 </html>
 

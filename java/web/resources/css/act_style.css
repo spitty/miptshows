@@ -19,13 +19,15 @@ body{
     margin: 0 auto 0 auto;
 }
 .hello_text{
-    font-size: 12px;
-    color: #ff0000;
+    font-size: 18px;
+    color: #ffffff;
+    font-weight: bold;
+    margin: 50px;
 }
-.ui-panel{
-    width: 700px;
+.ui-panel{  
     margin: 0 auto 0 auto;
 }
-.ui-datagrid{
-    width: 900px;
+
+tbody{
+    vertical-align: top;
 }
