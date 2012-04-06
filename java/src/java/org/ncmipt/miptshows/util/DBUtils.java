@@ -7,8 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  *
@@ -18,97 +18,108 @@ public class DBUtils implements Closeable
 {
 
     private Connection conn;
-    private PreparedStatement pstatInsert;
+    private static final Log LOG = LogFactory.getLog(DBUtils.class);
 
     /**
-     *
+     * Constructor of DBUtils class. It executes connection to DB and keeps result
+     * @return an instance of current class
      */
-    public void connect()
+    public DBUtils DBUtils()
     {
+        DBUtils dbUtils = new DBUtils();
+
         try
         {
             Class.forName("oracle.jdbc.OracleDriver");
             conn = DriverManager.getConnection("jdbc:oralce:thin:localhost:1522/orcl", "vlad", "vlad");
 
-        } catch (SQLException ex)
+        } catch (SQLException e)
         {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex)
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Smth wrong with DB", e);
+            }
+        } catch (ClassNotFoundException e)
         {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Smth wrong with DB", e);
+            }
         }
 
+        return dbUtils;
     }
 
     /**
      *
+     * @return
      */
-    public void createStatement()
+    public PreparedStatement createStatement()
     {
+        PreparedStatement pstat = null;
         try
         {
-            pstatInsert = conn.prepareStatement("INSERT INTO temp_data "
+            pstat = conn.prepareStatement("INSERT INTO temp_data "
                     + "(file_name, folder_name, file_size, server) VALUES (?, ?, ?, ?)");
-        } catch (SQLException ex)
+        } catch (SQLException e)
         {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Smth wrong with DB", e);
+            }
         }
+        return pstat;
     }
 
     /**
      *
-     * @param fileName
-     * @param folderName
-     * @param fileSize
-     * @param server
+     * @param pstat
+     * @return
      */
-    public void executeInsert(String fileName, String folderName, int fileSize, String server)
+    public int[] flush(PreparedStatement pstat)
     {
+        int[] results = null;
         try
         {
-            pstatInsert.setString(1, fileName);
-            pstatInsert.setString(1, folderName);
-            pstatInsert.setInt(1, fileSize);
-            pstatInsert.setString(1, server);
-
-            pstatInsert.addBatch();
-
-        } catch (SQLException ex)
+            results = pstat.executeBatch();
+        } catch (SQLException e)
         {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Smth wrong with DB", e);
+            }
         }
-    }
-
-    /**
-     *
-     */
-    public void flush()
-    {
-        try
-        {
-            pstatInsert.executeBatch();
-        } catch (SQLException ex)
-        {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        return results;
     }
 
     /**
      *
      * @param query
+     * @return
      */
-    public void executeUpdate(String query)
+    public int executeUpdate(String query)
     {
+        if (query == null)
+        {
+            throw new IllegalArgumentException("query cannot be null");
+        }
+
+        int result = 0;
+
         try
         {
             Statement stat = conn.createStatement();
-            stat.executeUpdate(query);
+            result = stat.executeUpdate(query);
             stat.close();
-        } catch (SQLException ex)
+        } catch (SQLException e)
         {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Smth wrong with DB", e);
+            }
         }
 
+        return result;
     }
 
     /**
@@ -124,9 +135,12 @@ public class DBUtils implements Closeable
             Statement stat = conn.createStatement();
             result = stat.executeQuery(query);
             stat.close();
-        } catch (SQLException ex)
+        } catch (SQLException e)
         {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Smth wrong with DB", e);
+            }
         }
 
         return result;
@@ -135,18 +149,31 @@ public class DBUtils implements Closeable
     /**
      *
      * @param query
+     * @return
      */
-    public void execute(String query)
+    public boolean execute(final String query)
     {
+        if (query == null)
+        {
+            throw new IllegalArgumentException("query cannot be null");
+        }
+
+        boolean isSuccess = false;
+
         try
         {
             Statement stat = conn.createStatement();
-            stat.execute(query);
+            isSuccess = stat.execute(query);
             stat.close();
-        } catch (SQLException ex)
+        } catch (SQLException e)
         {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Smth wrong with DB", e);
+            }
         }
+
+        return isSuccess;
     }
 
     @Override

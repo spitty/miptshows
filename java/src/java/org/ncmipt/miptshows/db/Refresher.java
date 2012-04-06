@@ -1,13 +1,18 @@
 package org.ncmipt.miptshows.db;
 
+import org.ncmipt.miptshows.util.TableUtils;
 import java.net.MalformedURLException;
+import java.sql.PreparedStatement;
 import jcifs.smb.SmbException;
-import org.apache.log4j.Logger;
 import jcifs.smb.SmbFile;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.PropertyConfigurator;
+import org.ncmipt.miptshows.smb.FileFindHandler;
 import org.ncmipt.miptshows.smb.FileFindHandlerDB;
 import org.ncmipt.miptshows.smb.JcifsController;
 import org.ncmipt.miptshows.util.DBUtils;
+import org.ncmipt.miptshows.util.IOTools;
 
 /**
  *
@@ -16,49 +21,67 @@ import org.ncmipt.miptshows.util.DBUtils;
 public class Refresher
 {
 
-    private static final Logger LOG = Logger.getLogger(Refresher.class);
+    private static final Log LOG = LogFactory.getLog(Refresher.class);
 
     /**
-     * 
-     * @param server
+     *
+     * @param share
      */
-    public void uprateDB(final String server)
+    // TODO add to LOG if
+    public void updateDB(final String share)
     {
-        if (server == null)
+        if (share == null)
         {
             throw new IllegalArgumentException("Server cannot be null");
         }
 
         PropertyConfigurator.configure("log4j.properties.txt");
 
+        DBUtils dbUtils = null;
+        PreparedStatement pstat = null;
+        FileFindHandler handler;
+
         try
         {
-            final SmbFile serverSmb = new SmbFile(server);
-            if (!serverSmb.exists())
+            final SmbFile shareSmb = new SmbFile(share);
+            if (!shareSmb.exists())
             {
-                LOG.error("Cannot find server " + server);
+                if (LOG.isErrorEnabled())
+                {
+                    LOG.error("Cannot find share " + share.toString());
+                }
                 return;
             }
 
-            DBUtils dbUtils = new DBUtils();
-            dbUtils.connect();
-            dbUtils.createStatement();
+            dbUtils = new DBUtils();
+            pstat = dbUtils.createStatement();
+            handler = new FileFindHandlerDB(pstat);
 
             // It must fill a temporary table
-            FileFindHandlerDB handler = new FileFindHandlerDB(dbUtils);
-            JcifsController.scanFolder(serverSmb, handler);
-            handler.endInsert();
+            JcifsController.scanFolder(shareSmb, handler);
+            dbUtils.flush(pstat);
 
             // It must retransmit the data from a temporary table to conctant tables and clear temptable
-            TableExchanger.merge(dbUtils);
-            TableExchanger.clearTempTable(dbUtils);
+            TableUtils.merge(dbUtils);
+            TableUtils.clearTempTable(dbUtils);
 
-        } catch (SmbException ex)
+        } catch (SmbException e)
         {
-            LOG.error("Smth bad", ex);
-        } catch (MalformedURLException ex)
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Smth wrong with DB", e);
+            }
+        } catch (MalformedURLException e)
         {
-            LOG.error("Cannot create SmbFile instance", ex);
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Smth wrong with DB", e);
+            }
+        } finally
+        {
+            // TODO google: try with resources
+            IOTools.close(pstat);
+            IOTools.close(dbUtils);
         }
     }
 }
