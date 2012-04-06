@@ -2,6 +2,8 @@ package org.ncmipt.miptshows.util;
 
 import java.io.Closeable;
 import java.lang.reflect.Method;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.LogManager;
 
 /**
@@ -12,13 +14,15 @@ import org.apache.log4j.LogManager;
 public class IOTools
 {
 
-    private static org.apache.log4j.Logger LOG = LogManager.getLogger(IOTools.class);
+    private static Log LOG = LogFactory.getLog(IOTools.class);
 
     /**
      * Private constructor. It prevents one from creating instance of {@link IOTools}
      */
     private IOTools()
+
     {
+        
     }
 
     /**

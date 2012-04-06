@@ -1,7 +1,9 @@
-
 package org.ncmipt.miptshows.smb;
 
-import org.ncmipt.miptshows.util.DBUtils;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  *
@@ -9,43 +11,49 @@ import org.ncmipt.miptshows.util.DBUtils;
  */
 public class FileFindHandlerDB implements FileFindHandler
 {
-    private static final int INSERTION_MAX = 1000;
 
-    private DBUtils dbUtils;
-    private int insertionCounter = 0;
+    private static final Log LOG = LogFactory.getLog(FileFindHandlerDB.class);
+    private static final int INSERTION_MAX = 100;
+    private PreparedStatement pstat;
+    private int insertionCounter;
+
+    public PreparedStatement getPstat()
+    {
+        return pstat;
+    }
 
     /**
      *
-     * @param dbUtils
+     * @param pstat
      */
-    public FileFindHandlerDB(DBUtils dbUtils)
+    public FileFindHandlerDB(PreparedStatement pstat)
     {
-        this.dbUtils = dbUtils;
         insertionCounter = 0;
+        this.pstat = pstat;
     }
 
     @Override
     public void onFileFound(FileObject file)
     {
-        if (insertionCounter < INSERTION_MAX)
+        try
         {
-            dbUtils.executeInsert(file.getName(), file.getFolder(),
-                    file.getSize(), file.getServer());
-            insertionCounter++;
-        } else {
-            dbUtils.flush();
-            insertionCounter = 0;
-        }
-    }
+            pstat.setString(1, file.getName());
+            pstat.setString(2, file.getFolder());
+            pstat.setInt(3, file.getSize());
+            pstat.setString(4, file.getServer());
+            pstat.addBatch();
+            
+            if (++insertionCounter <= INSERTION_MAX)
+            {
+                pstat.executeBatch();
+            }
 
-    /**
-     * !!!
-     * How should I know, when last insertion? It is temporary method for
-     * solution of this problem. Max, pay attention to this.
-     */
-    public void endInsert()
-    {
-        dbUtils.flush();
-        insertionCounter = 0;
+        } catch (SQLException e)
+        {
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Smth wrong with DB", e);
+            }
+        }
     }
 }

@@ -10,7 +10,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
-import org.apache.log4j.LogManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  *
@@ -19,8 +20,7 @@ import org.apache.log4j.LogManager;
 public class JcifsController
 {
 
-    private static final org.apache.log4j.Logger LOG = LogManager.getLogger(JcifsController.class);
-
+    private static final Log LOG = LogFactory.getLog(FileFindHandlerDB.class);
     @Deprecated
     private Map<String, String> map = new HashMap<String, String>();
 
@@ -37,57 +37,75 @@ public class JcifsController
         try
         {
             final SmbFile smbFile = new SmbFile(folderPath);
-            if(!smbFile.exists())
+            if (!smbFile.exists())
             {
-                LOG.error("Can't find SMB resource by path " + folderPath);
+                if (LOG.isErrorEnabled())
+                {
+                    LOG.error("Can't find SMB resource by path " + folderPath);
+                }
                 return;
             }
 
             scanFolder(smbFile, handler);
-        }
-        catch(SmbException ex)
+        } catch (SmbException e)
         {
-            Logger.getLogger(JcifsController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch(MalformedURLException ex)
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Smth wrong with DB ", e);
+            }
+        } catch (MalformedURLException e)
         {
-            Logger.getLogger(JcifsController.class.getName()).log(Level.SEVERE, null, ex);
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Smth wrong ", e);
+            }
         }
     }
 
+    /**
+     * This method recursively discover SMB resource
+     * <code>folderPath</code> and invoke {@link FileFindHandler#onFileFound(org.ncmipt.miptshows.smb.FileObject) handler.onFileFound}
+     * method on each found file
+     *
+     * @param smbFile samba file needing to scan
+     * @param handler {@link FileFindHandler} object to operate with results
+     */
     public static void scanFolder(final SmbFile smbFile, final FileFindHandler handler)
     {
-        if(smbFile == null)
+        if (smbFile == null)
         {
             throw new IllegalArgumentException("SmbFile can't be null");
         }
 
         try
         {
-            if(!smbFile.exists())
+            if (!smbFile.exists())
             {
-                LOG.error("Can't find SMB resource by path " + smbFile.getCanonicalPath());
+                if (LOG.isErrorEnabled())
+                {
+                    LOG.error("Can't find SMB resource by path " + smbFile.getCanonicalPath());
+                }
                 return;
             }
 
-            if(smbFile.isFile())
+            if (smbFile.isFile())
             {
-
-                handler.onFileFound(new FileObject(smbFile.getName(), smbFile.getParent(), smbFile.getServer(), smbFile.getContentLength()));
-            }
-            else if(smbFile.isDirectory())
+                handler.onFileFound(new FileObject(smbFile.getName(), smbFile.getParent(),
+                        smbFile.getServer(), smbFile.getContentLength()));
+            } else if (smbFile.isDirectory())
             {
                 final SmbFile files[] = smbFile.listFiles();
-                for(SmbFile file : files)
+                for (SmbFile file : files)
                 {
                     scanFolder(file, handler);
                 }
             }
-        }
-        catch(SmbException ex)
+        } catch (SmbException e)
         {
-            LOG.error("Error during processing SMB resource " + smbFile.getCanonicalPath());
-            Logger.getLogger(JcifsController.class.getName()).log(Level.SEVERE, null, ex);
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Error during processing SMB resource " + smbFile.getCanonicalPath(), e);
+            }
         }
     }
 
@@ -108,24 +126,21 @@ public class JcifsController
             SmbFile sfile = new SmbFile(cataloge);
             SmbFile[] sfs = sfile.listFiles();
 
-            for(SmbFile sf : sfs)
+            for (SmbFile sf : sfs)
             {
-                if(sf.isDirectory())
+                if (sf.isDirectory())
                 {
                     fillMap(sf.getPath());
-                }
-                else
+                } else
                 {
                     map.put(sf.getName(), sf.getPath());
                 }
             }
 
-        }
-        catch(SmbException ex)
+        } catch (SmbException ex)
         {
             Logger.getLogger(JcifsController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch(MalformedURLException ex)
+        } catch (MalformedURLException ex)
         {
             Logger.getLogger(JcifsController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -138,60 +153,32 @@ public class JcifsController
         try
         {
             SmbFile sf = new SmbFile(root);
-            if(!sf.exists())
+            if (!sf.exists())
             {
                 throw new IOException();    // complete it!!!
             }
 
-            if(sf.isFile())
+            if (sf.isFile())
             {
                 map.put(sf.getName(), sf.getPath());
-            }
-            else if(sf.isDirectory())
+            } else if (sf.isDirectory())
             {
                 fillMap(root);
             }
 
-        }
-        catch(SmbException ex)
+        } catch (SmbException ex)
         {
             Logger.getLogger(JcifsController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch(MalformedURLException ex)
+        } catch (MalformedURLException ex)
         {
             Logger.getLogger(JcifsController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        for(String str : map.keySet())
+        for (String str : map.keySet())
         {
             list.add(map.get(str));
         }
 
         return list;
-    }
-
-    /**
-     * Just for example. Remove it later
-     *
-     * @param args
-     * @throws MalformedURLException
-     */
-    public static void main(String[] args) throws MalformedURLException
-    {
-        SmbFile sf = new SmbFile("smb://natalie.campus/incoming/! For/917/");
-//        System.out.println(sf.getPath());
-//        System.out.println(sf.getCanonicalPath());
-//        System.out.println(sf.getParent());
-
-        JcifsController.scanFolder(sf, new FileFindHandler()
-        {
-
-            @Override
-            public void onFileFound(FileObject file)
-            {
-                // String concatenation is a very very bad practice. But it is just an example =)
-                System.out.println("Obtaining " + file.getName() + "(" + file.getFolder() + ")");
-            }
-        });
     }
 }
