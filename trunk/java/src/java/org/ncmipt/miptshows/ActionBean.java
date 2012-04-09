@@ -15,6 +15,7 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.cookie.BasicClientCookie2;
 import org.apache.log4j.LogManager;
 import org.ncmipt.miptshows.api.TopShow;
+import org.ncmipt.miptshows.db.CookiesChecker;
 import org.primefaces.event.RateEvent;
 
 /**
@@ -38,6 +39,7 @@ public class ActionBean
     private List<TopShow> listOfTopAllShows;
     private ConnectionManager handler;
     private boolean count;
+    private CookiesChecker checker = new CookiesChecker();
 
     // Block of getters & setters
     public List<TopShow> getListOfTopAllShows()
@@ -208,7 +210,7 @@ public class ActionBean
         listOfTopAllShows = JsonConverter.mapToTopShows(json);
     }
 
-   /**
+    /**
      * 
      * @param ShowId 
      */
@@ -217,7 +219,6 @@ public class ActionBean
         viewedSeries = handler.getListOfViewedSeries(ShowId);
     }
 
-    
     public void manageShowRate(RateEvent rateEvent)
     {
         String id = rateEvent.getComponent().getId();
@@ -227,10 +228,27 @@ public class ActionBean
         //handler.manageShowRate(showId, rat);
     }
 
-    public void doCookies(HttpRequest request, HttpResponse response)
+    /**
+     * 
+     * @param loginCookie
+     * @param passwCokie
+     * @return 
+     */
+    public String checkCookies(Cookie loginCookie, Cookie passwCokie)
     {
-        Cookie loginCookie = new BasicClientCookie2("login", login);
-        Cookie passwCookie = new BasicClientCookie2("password", password);
+        String redirectTo = "";
+//        Cookie loginCookie = new BasicClientCookie2("login", login);
+//        Cookie passwCookie = new BasicClientCookie2("password", password);
         //How to add cookies to response?
+        boolean isExist = checker.isUserExistInBase(login, password);
+        if (isExist)
+        {
+            redirectTo = "actions";
+        } else
+        {
+            checker.insertNewUserIntoBase(login, password);
+            redirectTo = "actions";
+        }
+        return redirectTo;
     }
 }
