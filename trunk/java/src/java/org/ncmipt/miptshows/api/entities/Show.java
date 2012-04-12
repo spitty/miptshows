@@ -1,4 +1,4 @@
-package org.ncmipt.miptshows.api;
+package org.ncmipt.miptshows.api.entities;
 
 /**
  *
@@ -116,5 +116,5 @@ public class Show {
     {
         this.watchedEpisodes = watchedEpisodes;
     }
-    
+
 }

@@ -1,5 +1,7 @@
 package org.ncmipt.miptshows.api;
 
+import org.ncmipt.miptshows.api.entities.Show;
+import org.ncmipt.miptshows.api.entities.TopShow;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
@@ -13,11 +15,11 @@ import java.util.Map;
  * @author Vlad, Roman
  */
 public class JsonConverter {
-    
+
     /**
-     * 
+     *
      * @param text
-     * @return 
+     * @return
      */
     public static List<Show> mapToShows(String text){
         Gson gson = new Gson();
@@ -25,17 +27,17 @@ public class JsonConverter {
         Map<String, Show> map = gson.fromJson(text, typeOfT);
 
         List<Show> list = new ArrayList<Show>();
-        
+
         for(String st: map.keySet()){
             list.add(map.get(st));
         }
         return list;
     }
-    
+
     /**
-     * 
+     *
      * @param text
-     * @return 
+     * @return
      */
     public static List<TopShow> mapToTopShows(String text)
     {
@@ -44,4 +46,8 @@ public class JsonConverter {
         List<TopShow> topList = gson.fromJson(text, typeOfT);
         return topList;
     }
+
+    //TODO: create json-handler of viewed series
+    //TODO: create json-handler of user info
+
 }

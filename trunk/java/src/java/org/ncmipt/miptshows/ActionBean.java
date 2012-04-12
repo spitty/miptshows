@@ -1,6 +1,6 @@
 package org.ncmipt.miptshows;
 
-import org.ncmipt.miptshows.api.Show;
+import org.ncmipt.miptshows.api.entities.Show;
 import org.ncmipt.miptshows.api.ConnectionManager;
 import org.ncmipt.miptshows.api.JsonConverter;
 import java.util.List;
@@ -8,13 +8,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.cookie.ClientCookie;
 import org.apache.http.cookie.Cookie;
-import org.apache.http.impl.cookie.BasicClientCookie2;
 import org.apache.log4j.LogManager;
-import org.ncmipt.miptshows.api.TopShow;
+import org.ncmipt.miptshows.api.entities.TopShow;
 import org.ncmipt.miptshows.db.CookiesChecker;
 import org.primefaces.event.RateEvent;
 
@@ -134,7 +130,7 @@ public class ActionBean
 
     /**
      * This function make a greeting string using the user's login.
-     * 
+     *
      * @return greeting String
      */
     public String greeting()
@@ -144,7 +140,7 @@ public class ActionBean
 
     /**
      * This function trying to do authorization with imputed login and MD5-converted password.
-     * 
+     *
      * @return redirectTo name of the further page
      */
     public String authorization()
@@ -168,10 +164,8 @@ public class ActionBean
     }
 
     /**
-     * This function create list of  shows from JSON, 
+     * This function create list of  shows from JSON,
      * obtained from server response and converted by JsonConverter into List
-     * 
-     * @return List<Show>
      */
     public void makeListOfShows()
     {
@@ -180,9 +174,9 @@ public class ActionBean
     }
 
     /**
-     * 
-     * 
-     * @return 
+     *
+     *
+     * @return
      */
     public String userInfo()
     {
@@ -190,8 +184,8 @@ public class ActionBean
         return userInfo;
     }
 
-    /** 
-     * This is debug function for getting authorization with 'SpringProject' login and 'Spring@Project' password. 
+    /**
+     * This is debug function for getting authorization with 'SpringProject' login and 'Spring@Project' password.
      * Not waste our time for authorization in debugging process;
      */
     public void setDefaultAuth()
@@ -202,7 +196,7 @@ public class ActionBean
 
     /**
      * This function create a List of TopShows where positions are ordered by rating
-     * 
+     *
      */
     public void makeListOfTopAllShows()
     {
@@ -211,8 +205,8 @@ public class ActionBean
     }
 
     /**
-     * 
-     * @param ShowId 
+     *
+     * @param ShowId
      */
     public void makeListOfViewedSeries(int ShowId)
     {
@@ -229,10 +223,10 @@ public class ActionBean
     }
 
     /**
-     * 
+     *
      * @param loginCookie
      * @param passwCokie
-     * @return 
+     * @return
      */
     public String checkCookies(Cookie loginCookie, Cookie passwCokie)
     {

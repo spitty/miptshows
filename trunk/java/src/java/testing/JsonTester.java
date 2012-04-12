@@ -1,6 +1,6 @@
 package testing;
 
-import org.ncmipt.miptshows.api.Show;
+import org.ncmipt.miptshows.api.entities.Show;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
@@ -16,7 +16,7 @@ import java.util.List;
  */
 import java.util.Map;
 import java.util.TreeSet;
-import org.ncmipt.miptshows.api.TopShow;
+import org.ncmipt.miptshows.api.entities.TopShow;
 public class JsonTester
 {
 
@@ -65,7 +65,7 @@ public class JsonTester
                 + "\"rating\":0,"
                 + "\"image\":\"http:\\/\\/images.tvrage.com\\/shows\\/20\\/19295.jpg\"}}";
 
-         * 
+         *
          */
 
        /* String text = "{\"1\":{\"showId\":2,"
@@ -86,9 +86,9 @@ public class JsonTester
         Type typeOfT = new TypeToken<List<TopShow>>(){}.getType();
         List<TopShow> topList = gson.fromJson(text, typeOfT);
         System.out.println(topList.get(0).getId());
-        
+
         //System.out.println(list.get(0).getId());
-        
+
  //       Map<String, Show> map = new HashMap<String, Show>();
    //     Type typeOfT = new TypeToken<HashMap<String, Show>>(){}.getType();
         //System.out.println(map.containsKey("1"));

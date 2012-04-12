@@ -12,7 +12,7 @@
     <h:body>
         <h:outputText value="#{actionBean.greeting()}" styleClass="hello_text"></h:outputText>
         <h:form styleClass="act_show_view1">
-            <p:growl id="messages" showDetail="true"/> 
+            <p:growl id="messages" showDetail="true"/>
             <p:commandButton value="View my shows" actionListener="#{actionBean.makeListOfShows}" update="list"/>
             <p:dataGrid id="list" value="#{actionBean.listOfShows}" columns="3" var="show"
                         rows="12" paginator="true"
@@ -22,23 +22,23 @@
                 <p:column>
                     <p:panel header="#{show.title}" styleClass="showPanel">
                         <h:panelGrid columns="1" styleClass="viewShowsPanel">
-                            
+
                             <p:graphicImage value="#{show.image}"/>
                             <h:outputText value="#{show.ruTitle}"/>
-                            <!--                            <h:outputText value="Runtime: # {show.runtime}"/>-->
+<!--                            <h:outputText value="Runtime: # {show.runtime}"/>-->
                             <h:outputText value="Статус сериала: #{show.showStatus}"/>
                             <h:outputText value="Всего серий: #{show.totalEpisodes}"/>
-                            <h:outputText value="Статус просмотра: # {show.watchStatus}"/>
-                            <!--                            <h:outputText value="ShowID: # {show.showId}"/>-->
-                            <p:rating value="#{show.showId}" disabled="true">  
-                                <!--                                  <p:ajax event="rate"  listener="# {actionBean.manageShowRate}" update="messages" />  -->
-                            </p:rating>  
-                            
+                            <h:outputText value="Статус просмотра: #{show.watchStatus}"/>
+<!--                            <h:outputText value="ShowID: #{show.showId}"/>-->
+                            <p:rating value="#{show.rating}" stars="10" disabled="false">
+<!--                                <p:ajax event="rate"  listener="# {actionBean.manageShowRate}" update="messages" />  -->
+                            </p:rating>
+
                             <h:commandButton actionListener="#{actionBean.makeListOfViewedSeries(show.showId)}" value="Viewed series">
                                 <f:ajax render="many"/>
                             </h:commandButton>
-                            <h:outputText value="#{actionBean.viewedSeries}"  id="many" /> 
-                            
+                            <h:outputText value="#{actionBean.viewedSeries}"  id="many" />
+
                         </h:panelGrid>
                     </p:panel>
                 </p:column>
@@ -54,8 +54,8 @@
             </h:commandButton>
 
             <p:dataList value="#{actionBean.listOfTopAllShows}" id="TopShowList" var="show" first="0" styleClass="dataList">
-                #{show.place} 
-                <h:commandLink >#{show.title}</h:commandLink><!--Necessary to make link to page for view each show in details --> 
+                #{show.place}
+                <h:commandLink >#{show.title}</h:commandLink><!--Necessary to make link to page for view each show in details -->
             </p:dataList>
             <!--            <h:outputText value="# {actionBean.viewedSeries}"/>-->
         </h:form>
