@@ -27,7 +27,6 @@ public class Refresher
      *
      * @param share
      */
-    // TODO add to LOG if
     public void updateDB(final String share)
     {
         if (share == null)

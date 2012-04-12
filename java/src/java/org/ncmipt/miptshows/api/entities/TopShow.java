@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.ncmipt.miptshows.api;
+package org.ncmipt.miptshows.api.entities;
 
 /**
  *

@@ -1,5 +1,5 @@
 
-package org.ncmipt.miptshows.api;
+package org.ncmipt.miptshows.api.entities;
 
 /**
  *

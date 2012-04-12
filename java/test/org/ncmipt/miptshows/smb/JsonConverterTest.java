@@ -1,7 +1,7 @@
 package org.ncmipt.miptshows.smb;
 
 import org.ncmipt.miptshows.api.JsonConverter;
-import org.ncmipt.miptshows.api.Show;
+import org.ncmipt.miptshows.api.entities.Show;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
