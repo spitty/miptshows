@@ -20,7 +20,7 @@ import org.apache.commons.logging.LogFactory;
 public class JcifsController
 {
 
-    private static final Log LOG = LogFactory.getLog(FileFindHandlerDB.class);
+    private static final Log LOG = LogFactory.getLog(JcifsController.class);
     @Deprecated
     private Map<String, String> map = new HashMap<String, String>();
 
