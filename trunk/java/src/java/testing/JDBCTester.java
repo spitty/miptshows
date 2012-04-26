@@ -24,10 +24,10 @@ public class JDBCTester
             conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1522/orcl", "vlad", "vlad");
 
             Statement stat = conn.createStatement();
-            ResultSet result = stat.executeQuery("select * from temp_data");
+            ResultSet result = stat.executeQuery("select * from users");
             while (result.next())
             {
-                System.out.println(result.getInt(3));
+                System.out.println(result.getString(1));
             }
             result.close();
             stat.close();

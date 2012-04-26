@@ -22,6 +22,23 @@ public class JsonTester
 
     public static void main(String[] args)
     {
+        String text =""
+                +   "\"1429415\":{"
+                +       "\"episodeId\":1429415,"
+                +       "\"title\":\"The Hawking Excitation\","
+                +       "\"showId\":2,"
+                +       "\"seasonNumber\":5,"
+                +       "\"episodeNumber\":21,"
+                +       "\"airDate\":\"05.04.2012\"},"
+                +   "\"1429590\":{"
+                +       "\"episodeId\":1429590,"
+                +       "\"title\":\"Butterballs\","
+                +       "\"showId\":34,"
+                +       "\"seasonNumber\":16,"
+                +       "\"episodeNumber\":5,"
+                +       "\"airDate\":\"11.04.2012\"}"
+                +   "";
+        /*
         String text ="[{\"id\":1,"
                 + "\"title\":\"House\","
                 + "\"ruTitle\":\"\\u0414\u043e\u043a\\u0442\\u043e\\u0440 \\u0425\\u0430\\u0443\\u0441\","
@@ -32,6 +49,8 @@ public class JsonTester
                 + "\"watching\":43586,"
                 + "\"image\":\"http:\\/\\/images.tvrage.com\\/shows\\/4\\/3908.jpg\","
                 + "\"place\":1}]";
+         * 
+         */
         /*String text = "{\"2\":{\"showId\":2,"
                 + "\"title\":\"The Big Bang Theory\","
                 + "\"ruTitle\":\"\\u0422\\u0435\\u043e\\u0440\\u0438\\u044f \\u0431\\u043e\\u043b\\u044c\\u0448\\u043e\\u0433\\u043e \\u0432\\u0437\\u0440\\u044b\\u0432\\u0430\","
@@ -83,9 +102,11 @@ public class JsonTester
                  */
 
         Gson gson = new Gson();
-        Type typeOfT = new TypeToken<List<TopShow>>(){}.getType();
-        List<TopShow> topList = gson.fromJson(text, typeOfT);
-        System.out.println(topList.get(0).getId());
+//        Type typeOfT = new TypeToken<List<TopShow>>(){}.getType();
+//        List<TopShow> topList = gson.fromJson(text, typeOfT);
+//        System.out.println(topList.get(0).getId());
+        Type typeOfT = new TypeToken<List<Episode>>(){}.getType();
+        List<Episode> episodes = gson.fromJson(text, typeOfT);
 
         //System.out.println(list.get(0).getId());
 

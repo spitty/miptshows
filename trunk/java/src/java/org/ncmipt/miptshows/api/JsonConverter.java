@@ -9,26 +9,32 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.ncmipt.miptshows.api.entities.Episode;
 
 /**
  *
  * @author Vlad, Roman
  */
-public class JsonConverter {
+public class JsonConverter
+{
 
     /**
      *
      * @param text
      * @return
      */
-    public static List<Show> mapToShows(String text){
+    public static List<Show> mapToShows(String text)
+    {
         Gson gson = new Gson();
-        Type typeOfT = new TypeToken<HashMap<String, Show>>(){}.getType();
+        Type typeOfT = new TypeToken<HashMap<String, Show>>()
+        {
+        }.getType();
         Map<String, Show> map = gson.fromJson(text, typeOfT);
 
         List<Show> list = new ArrayList<Show>();
 
-        for(String st: map.keySet()){
+        for (String st : map.keySet())
+        {
             list.add(map.get(st));
         }
         return list;
@@ -47,7 +53,15 @@ public class JsonConverter {
         return topList;
     }
 
+    public static List<Episode> mapToEpisodes(String text)
+    {
+         
+        Gson gson = new Gson();
+        Type typeOfT = new TypeToken<List<Episode>>(){}.getType();
+        List<Episode> episodes = gson.fromJson(text,typeOfT);
+        return episodes;
+        
+    }
     //TODO: create json-handler of viewed series
     //TODO: create json-handler of user info
-
 }

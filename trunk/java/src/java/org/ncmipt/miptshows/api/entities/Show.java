@@ -1,5 +1,7 @@
 package org.ncmipt.miptshows.api.entities;
 
+import java.util.List;
+
 /**
  *
  * @author Vlad, Roman
@@ -16,6 +18,17 @@ public class Show {
     String image;
     String showStatus;
     String watchStatus;
+    List<Episode> list;
+
+    public List<Episode> getList()
+    {
+        return list;
+    }
+
+    public void setList(List<Episode> list)
+    {
+        this.list = list;
+    }
 
     public String getImage()
     {

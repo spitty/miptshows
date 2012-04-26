@@ -3,6 +3,7 @@ package org.ncmipt.miptshows.db;
 import java.io.Closeable;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import org.apache.commons.logging.Log;
@@ -19,17 +20,13 @@ public class CookiesChecker implements Closeable
     private static final Log LOG = LogFactory.getLog(CookiesChecker.class);
     private Connection conn;
 
-    /**
-     * Constructor of CookiesChecker with creating connection 
-     * @return 
-     */
-    public CookiesChecker CookieChecker()
+    public CookiesChecker()
     {
-        CookiesChecker checker = new CookiesChecker();
         try
         {
             Class.forName("oracle.jdbc.OracleDriver");
-            conn = DriverManager.getConnection("jdbc:oralce:thin:localhost:1522/orcl", "vlad", "vlad");
+            conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1522/orcl", "vlad", "vlad");
+
         } catch (ClassNotFoundException ex)
         {
             LOG.error("Can't make Class.forName", ex);
@@ -37,7 +34,6 @@ public class CookiesChecker implements Closeable
         {
             LOG.error("Can't create connection", ex);
         }
-        return checker;
     }
 
     /**
@@ -53,17 +49,24 @@ public class CookiesChecker implements Closeable
         try
         {
             Statement stat = conn.createStatement();
-            String query = "SELECT login, password FROM users"
-                    + "WHERE login = " + login
-                    + "AND password = " + password;
-            isExist = stat.execute(query);
+            String query = "select count(1) from users"
+                    + " where login = '" + login
+                    + "' AND password = '" + password + "'";
+            ResultSet result = stat.executeQuery(query);
+            if(result.next())
+            {
+                if(result.getInt(1)==1){
+                    isExist = true;
+                }
+            }
+            return isExist;
 
         } catch (SQLException ex)
         {
             LOG.error("Can't create statement", ex);
         } finally
         {
-            close();
+//            close(); Рома, настрой нормально свой логгер!
         }
         return isExist;
 
@@ -79,15 +82,15 @@ public class CookiesChecker implements Closeable
         try
         {
             Statement stat = conn.createStatement();
-            String query = "INSERT INTO users(login, password) VALUES ('" + login + "','" + password + "')";
+            String query = "INSERT INTO users(user_id,login, password) VALUES (id_generator.nextval, '" + login + "','" + password + "')";
             stat.executeUpdate(query);
-            stat.execute("commit");
+//            stat.execute("commit");
         } catch (SQLException ex)
         {
             LOG.error("Can't create statement", ex);
         } finally
         {
-            close();
+//            close();
         }
     }
 
