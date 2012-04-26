@@ -1,6 +1,6 @@
 package org.ncmipt.miptshows;
 
-import org.ncmipt.miptshows.api.entities.Show;
+import java.io.IOException;
 import org.ncmipt.miptshows.api.ConnectionManager;
 import org.ncmipt.miptshows.api.JsonConverter;
 import java.util.List;
@@ -10,6 +10,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import org.apache.http.cookie.Cookie;
 import org.apache.log4j.LogManager;
+import org.ncmipt.miptshows.api.entities.Show;
 import org.ncmipt.miptshows.api.entities.TopShow;
 import org.ncmipt.miptshows.db.CookiesChecker;
 import org.primefaces.event.RateEvent;
@@ -23,8 +24,7 @@ import org.primefaces.event.RateEvent;
 public class ActionBean
 {
 
-    //I suppose logger shouldn't be final. If we make Logger final we won't be able to add and change properties.
-    private static org.apache.log4j.Logger LOG = LogManager.getLogger(ActionBean.class);
+    private static final org.apache.log4j.Logger LOG = LogManager.getLogger(ActionBean.class);
     private String response;
     private String login = "";
     private String password = "";
@@ -32,12 +32,56 @@ public class ActionBean
     private String userInfo = "";
     private String viewedSeries = "";
     private List<Show> listOfShows;
+    private List<Show> listOfWatchingShows;
+    private List<Show> listOfLaterShows;
+    private List<Show> listOfCancelledShows;
     private List<TopShow> listOfTopAllShows;
+    private List<Show> listOfRemoveShows;
     private ConnectionManager handler;
-    private boolean count;
-    private CookiesChecker checker = new CookiesChecker();
+    private static final CookiesChecker checker = new CookiesChecker();
+    private static final ListOfShowsChanger showChanger = new ListOfShowsChanger();
 
     // Block of getters & setters
+    public List<Show> getListOfCancelledShows()
+    {
+        return listOfCancelledShows;
+    }
+
+    public void setListOfCancelledShows(List<Show> listOfCancelledShows)
+    {
+        this.listOfCancelledShows = listOfCancelledShows;
+    }
+
+    public List<Show> getListOfLaterShows()
+    {
+        return listOfLaterShows;
+    }
+
+    public void setListOfLaterShows(List<Show> listOfLaterShows)
+    {
+        this.listOfLaterShows = listOfLaterShows;
+    }
+
+    public List<Show> getListOfRemoveShows()
+    {
+        return listOfRemoveShows;
+    }
+
+    public void setListOfRemoveShows(List<Show> listOfRemoveShows)
+    {
+        this.listOfRemoveShows = listOfRemoveShows;
+    }
+
+    public List<Show> getListOfWatchingShows()
+    {
+        return listOfWatchingShows;
+    }
+
+    public void setListOfWatchingShows(List<Show> listOfWatchingShows)
+    {
+        this.listOfWatchingShows = listOfWatchingShows;
+    }
+
     public List<TopShow> getListOfTopAllShows()
     {
         return listOfTopAllShows;
@@ -118,12 +162,7 @@ public class ActionBean
         this.viewedSeries = viewedSeries;
     }
 
-    public void setCount(boolean count)
-    {
-        this.count = count;
-    }
     // End of the block setters and getters
-
     public ActionBean()
     {
     }
@@ -171,6 +210,13 @@ public class ActionBean
     {
         response = handler.getListOfShows();
         listOfShows = JsonConverter.mapToShows(response);
+        List<List<Show>> list = showChanger.makeListOfShowTypes(listOfShows);
+        listOfWatchingShows = list.get(0);
+        listOfLaterShows = list.get(1);
+        listOfCancelledShows = list.get(2);
+        listOfRemoveShows = list.get(3);
+        list = null;
+
     }
 
     /**
@@ -190,8 +236,8 @@ public class ActionBean
      */
     public void setDefaultAuth()
     {
-        this.setPassword("spring@Project");
-        this.setLogin("springProject");
+        setPassword("spring@Project");
+        setLogin("springProject");
     }
 
     /**
@@ -228,21 +274,37 @@ public class ActionBean
      * @param passwCokie
      * @return
      */
-    public String checkCookies(Cookie loginCookie, Cookie passwCokie)
+    //This function should be started on first page onload event, but I don't know how to do it
+    //perhaps parameters should be request or/and response
+    public void checkCookies(Cookie loginCookie, Cookie passwCookie)
     {
         String redirectTo = "";
-//        Cookie loginCookie = new BasicClientCookie2("login", login);
-//        Cookie passwCookie = new BasicClientCookie2("password", password);
-        //How to add cookies to response?
-        boolean isExist = checker.isUserExistInBase(login, password);
+        String userLogin = loginCookie.getValue();
+        String userPassw = passwCookie.getValue();
+
+        boolean isExist = checker.isUserExistInBase(userLogin, userPassw);
         if (isExist)
         {
-            redirectTo = "actions";
+            try
+            {
+                this.login = userLogin;
+                this.password = userPassw;
+                redirectTo = "actions";
+                FacesContext.getCurrentInstance().getExternalContext().dispatch(redirectTo);
+
+            } catch (IOException ex)
+            {
+                LOG.error("can't redirect to actions.xhtml", ex);
+            }
         } else
         {
-            checker.insertNewUserIntoBase(login, password);
-            redirectTo = "actions";
+            try
+            {
+                FacesContext.getCurrentInstance().getExternalContext().dispatch(redirectTo);
+            } catch (IOException ex)
+            {
+                LOG.error("Can't redirect to index.xtml. User isn't in base", ex);
+            }
         }
-        return redirectTo;
     }
 }
