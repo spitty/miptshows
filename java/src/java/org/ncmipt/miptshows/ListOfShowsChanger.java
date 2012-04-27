@@ -17,19 +17,19 @@ import org.ncmipt.miptshows.api.entities.Show;
  */
 public class ListOfShowsChanger
 {
-
+    
     private static final String WATHCING = "watching";
     private static final String LATER = "later";
     private static final String CANCELLED = "cancelled";
     private static final String REMOVE = "remove";
 
     /**
-     * 
+     * This function adds in each show its unwatched episodes
      * @param shows
      * @param episodes
      * @return 
      */
-    public List<Show> makeShowsWithEpisodes(List<Show> shows, List<Episode> episodes)
+    public static List<Show> makeShowsWithEpisodes(List<Show> shows, List<Episode> episodes)
     {
         for (Show show : shows)
         {
@@ -46,17 +46,18 @@ public class ListOfShowsChanger
     }
 
     /**
+     * makeListOfShowTypes separates shows by status.
      * 
      * @param listOfShows
      * @return 
      */
-    public List<List<Show>> makeListOfShowTypes(List<Show> listOfShows)
+    public static List<List<Show>> makeListOfShowTypes(List<Show> listOfShows)
     {
-        //index 0 - WATCHING
-        //index 1 - LATER
-        //index 2 - CANCELLED
-        //index 3 - REMOVE
-        List<List<Show>> typeList = new ArrayList<List<Show>>();//Hi J7!
+        
+        List<Show> listOfWatchingShows = new ArrayList<Show>();
+        List<Show> listOfLaterShows = new ArrayList<Show>();
+        List<Show> listOfCancelledShows = new ArrayList<Show>();
+        List<Show> listOfRemoveShows = new ArrayList<Show>();
         for (Show show : listOfShows)
         {
             String status = show.getWatchStatus();
@@ -79,22 +80,28 @@ public class ListOfShowsChanger
 //            }
             if (status.equals(WATHCING))
             {
-                typeList.get(0).add(show);
+                listOfWatchingShows.add(show);
             }
             if (status.equals(LATER))
             {
-                typeList.get(1).add(show);
+                listOfLaterShows.add(show);
             }
             if (status.equals(CANCELLED))
             {
-                typeList.get(2).add(show);
+                listOfCancelledShows.add(show);
             }
             if (status.equals(REMOVE))
             {
-                typeList.get(3).add(show);
+                listOfRemoveShows.add(show);
             }
+            
         }
+        List<List<Show>> typeList = new ArrayList<List<Show>>();
+        typeList.add(listOfWatchingShows);
+        typeList.add(listOfLaterShows);
+        typeList.add(listOfRemoveShows);
+        typeList.add(listOfCancelledShows);
+        
         return typeList;
-
     }
 }
