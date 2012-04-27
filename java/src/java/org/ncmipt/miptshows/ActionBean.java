@@ -1,6 +1,7 @@
 package org.ncmipt.miptshows;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import org.ncmipt.miptshows.api.ConnectionManager;
 import org.ncmipt.miptshows.api.JsonConverter;
 import java.util.List;
@@ -10,6 +11,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import org.apache.http.cookie.Cookie;
 import org.apache.log4j.LogManager;
+import org.ncmipt.miptshows.api.entities.Episode;
 import org.ncmipt.miptshows.api.entities.Show;
 import org.ncmipt.miptshows.api.entities.TopShow;
 import org.ncmipt.miptshows.db.CookiesChecker;
@@ -25,7 +27,7 @@ public class ActionBean
 {
 
     private static final org.apache.log4j.Logger LOG = LogManager.getLogger(ActionBean.class);
-    private String response;
+    private String resp;
     private String login = "";
     private String password = "";
     private int status = 0;
@@ -38,6 +40,18 @@ public class ActionBean
     private List<TopShow> listOfTopAllShows;
     private List<Show> listOfRemoveShows;
     private ConnectionManager handler;
+    private List<Episode> ep;
+
+
+    public List<Episode> getEp()
+    {
+        return ep;
+    }
+
+    public void setEp(List<Episode> ep)
+    {
+        this.ep = ep;
+    }
     private static final CookiesChecker checker = new CookiesChecker();
     private static final ListOfShowsChanger showChanger = new ListOfShowsChanger();
 
@@ -122,14 +136,14 @@ public class ActionBean
         this.password = password;
     }
 
-    public String getResponse()
+    public String getResp()
     {
-        return response;
+        return resp;
     }
 
-    public void setResponse(String response)
+    public void setResp(String resp)
     {
-        this.response = response;
+        this.resp = resp;
     }
 
     public int getStatus()
@@ -208,14 +222,26 @@ public class ActionBean
      */
     public void makeListOfShows()
     {
-        response = handler.getListOfShows();
+
+        String response = handler.getListOfShows();
         listOfShows = JsonConverter.mapToShows(response);
-        List<List<Show>> list = showChanger.makeListOfShowTypes(listOfShows);
-        listOfWatchingShows = list.get(0);
-        listOfLaterShows = list.get(1);
-        listOfCancelledShows = list.get(2);
-        listOfRemoveShows = list.get(3);
-        list = null;
+
+        response = handler.getUnwatchedEpisodes();
+        //resp = response;
+        List<Episode> episodes = JsonConverter.mapToEpisodes(response);
+        ep = episodes;
+        List<Show> lsh = new ArrayList<Show>();
+        lsh = showChanger.makeShowsWithEpisodes(listOfShows, episodes);
+        listOfShows = lsh;
+//        epTtile = listOfShows.toString();
+
+        //method
+        //List<List<Show>> list = showChanger.makeListOfShowTypes(listOfShows);
+//        listOfWatchingShows = list.get(0);
+//        listOfLaterShows = list.get(1);
+//        listOfCancelledShows = list.get(2);
+//        listOfRemoveShows = list.get(3);
+//        list = null;
 
     }
 

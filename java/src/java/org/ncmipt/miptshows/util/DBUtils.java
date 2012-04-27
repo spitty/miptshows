@@ -18,20 +18,24 @@ public class DBUtils implements Closeable
 {
 
     private Connection conn;
+
+    public Connection getConn()
+    {
+        return conn;
+    }
     private static final Log LOG = LogFactory.getLog(DBUtils.class);
 
     /**
      * Constructor of DBUtils class. It executes connection to DB and keeps result
      * @return an instance of current class
      */
-    public DBUtils DBUtils()
+    public DBUtils()
     {
-        DBUtils dbUtils = new DBUtils();
-
+     
         try
         {
             Class.forName("oracle.jdbc.OracleDriver");
-            conn = DriverManager.getConnection("jdbc:oralce:thin:localhost:1522/orcl", "vlad", "vlad");
+            conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1522/orcl", "vlad", "vlad");
 
         } catch (SQLException e)
         {
@@ -46,8 +50,6 @@ public class DBUtils implements Closeable
                 LOG.error("Smth wrong with DB", e);
             }
         }
-
-        return dbUtils;
     }
 
     /**
@@ -163,7 +165,7 @@ public class DBUtils implements Closeable
         try
         {
             Statement stat = conn.createStatement();
-            isSuccess = stat.execute(query);
+            stat.execute(query);
             stat.close();
         } catch (SQLException e)
         {

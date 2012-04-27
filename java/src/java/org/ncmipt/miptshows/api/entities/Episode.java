@@ -12,7 +12,7 @@ public class Episode
 {
     int episodeId;
     String title;
-    int showId;
+    String showId;
     int seasonNmber;
     int episodeNumber;
     String airDate;
@@ -57,12 +57,12 @@ public class Episode
         this.seasonNmber = seasonNmber;
     }
 
-    public int getShowId()
+    public String getShowId()
     {
         return showId;
     }
 
-    public void setShowId(int showId)
+    public void setShowId(String showId)
     {
         this.showId = showId;
     }

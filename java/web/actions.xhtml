@@ -11,7 +11,7 @@
     </h:head>
     <h:body >
         <h:outputText value="#{actionBean.greeting()}" styleClass="hello_text"></h:outputText>
-        <h:form styleClass="act_show_view1">
+        <h:form styleClass="act_show_view1" >
             <p:growl id="messages" showDetail="true"/> 
             <p:commandButton value="View my shows" actionListener="#{actionBean.makeListOfShows}" update="list"/>
             <p:dataGrid id="list" value="#{actionBean.listOfShows}" columns="3" var="show"
@@ -22,14 +22,14 @@
                 <p:column>
                     <p:panel header="#{show.title}" styleClass="showPanel">
                         <h:panelGrid columns="1" styleClass="viewShowsPanel">
-
                             <p:graphicImage value="#{show.image}"/>
                             <h:outputText value="#{show.ruTitle}"/>
-                            <!--                            <h:outputText value="Runtime: # {show.runtime}"/>-->
                             <h:outputText value="Статус сериала: #{show.showStatus}"/>
                             <h:outputText value="Всего серий: #{show.totalEpisodes}"/>
                             <h:outputText value="Статус просмотра: #{show.watchStatus}"/>
-                            <!--                            <h:outputText value="ShowID: # {show.showId}"/>-->
+<!--TODO                            -->
+<!--                            <h:outputText value="Size # {show.listOfUnwathedEpisodes.get(0).title}"/>-->
+
                             <p:rating value="#{show.showId}" disabled="true">  
                                 <!--                                  <p:ajax event="rate"  listener="# {actionBean.manageShowRate}" update="messages" />  -->
                             </p:rating>  
@@ -43,6 +43,21 @@
                     </p:panel>
                 </p:column>
             </p:dataGrid>
+            
+            
+            <p:dataGrid id="ep" value="#{actionBean.ep}" columns="3" var="ep"
+                        rows="12" paginator="true"
+                        paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                        rowsPerPageTemplate="9,12,15"
+                        styleClass="act_show_view2">
+                <p:column>
+                    <p:panel header="#{ep.title}" styleClass="showPanel">
+                    </p:panel>
+                </p:column>
+            </p:dataGrid>
+            
+            
+            
         </h:form>
 
         <h:form>

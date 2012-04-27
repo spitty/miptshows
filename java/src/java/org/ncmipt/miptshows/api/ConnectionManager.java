@@ -30,6 +30,7 @@ public class ConnectionManager
     private static final String PROFILE = "profile/";
     private static final String LOGIN = "login?";
     private static final String SHOWS = "shows/";
+    private static final String EPISODES = "episodes/unwatched/";
     private HttpClient httpClient;
 
     /**
@@ -135,7 +136,7 @@ public class ConnectionManager
         }
         return sb.toString();
     }
-    
+
 //     public String mmmSeries(int episode)
 //    {
 //        HttpPost httpPost = new HttpPost(HOST + PROFILE + SHOWS +"3/"+ episode + '/');
@@ -154,7 +155,6 @@ public class ConnectionManager
 //        }
 //        return sb.toString();
 //    }
-
     /**
      * This function sets the value of rate for chosen show
      * 
@@ -198,6 +198,31 @@ public class ConnectionManager
     public String getUserInfo(String login)
     {
         HttpPost httpPost = new HttpPost(HOST + PROFILE + login);
+        StringBuilder sb = new StringBuilder("");
+        try
+        {
+            HttpResponse response = httpClient.execute(httpPost);
+            Scanner scanner = new Scanner(response.getEntity().getContent(), "UTF-8");
+            while (scanner.hasNextLine())
+            {
+                sb.append(scanner.nextLine());
+            }
+        } catch (IOException ex)
+        {
+            LOG.error("Failed to create server response", ex);
+        }
+        return sb.toString();
+    }
+    
+   
+    /**
+     * 
+     * @return 
+     */
+    public String getUnwatchedEpisodes()
+    {
+        //http://api.myshows.ru/profile/episodes/unwatched/ 
+        HttpPost httpPost = new HttpPost(HOST + PROFILE + EPISODES);
         StringBuilder sb = new StringBuilder("");
         try
         {
