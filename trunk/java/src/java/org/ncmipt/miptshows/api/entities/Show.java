@@ -12,7 +12,7 @@ public class Show {
     int watchedEpisodes;
     int totalEpisodes;
     float runtime;
-    double rating;
+    String rating;
     String showId;
     String title;
     String ruTitle;
@@ -43,12 +43,12 @@ public class Show {
         this.image = image;
     }
 
-    public double  getRating()
+    public String  getRating()
     {
         return rating;
     }
 
-    public void setRating(float rating)
+    public void setRating(String rating)
     {
         this.rating = rating;
     }

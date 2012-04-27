@@ -60,7 +60,7 @@ public class JsonConverterTest
         show.setWatchStatus("later");
         show.setWatchedEpisodes(0);
         show.setTotalEpisodes(105);
-        show.setRating(0);
+        show.setRating("0");
         show.setImage("http://images.tvrage.com/shows/9/8511.jpg");
 
         String text = "{\"2\":{\"showId\":2,"
@@ -88,7 +88,7 @@ public class JsonConverterTest
             assertEquals(expResult.get(i).getWatchStatus(), result.get(i).getWatchStatus());
             assertEquals(expResult.get(i).getWatchedEpisodes(), result.get(i).getWatchedEpisodes());
             assertEquals(expResult.get(i).getTotalEpisodes(), result.get(i).getTotalEpisodes());
-            assertEquals(expResult.get(i).getRating(), result.get(i).getRating(), 0);
+            assertEquals(expResult.get(i).getRating(), result.get(i).getRating(), "0");
             assertEquals(expResult.get(i).getImage(), result.get(i).getImage());
         }
     }

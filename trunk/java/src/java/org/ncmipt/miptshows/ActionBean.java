@@ -52,8 +52,7 @@ public class ActionBean
     {
         this.ep = ep;
     }
-    private static final CookiesChecker checker = new CookiesChecker();
-    private static final ListOfShowsChanger showChanger = new ListOfShowsChanger();
+    //private static final CookiesChecker checker = new CookiesChecker();
 
     // Block of getters & setters
     public List<Show> getListOfCancelledShows()
@@ -227,21 +226,17 @@ public class ActionBean
         listOfShows = JsonConverter.mapToShows(response);
 
         response = handler.getUnwatchedEpisodes();
-        //resp = response;
         List<Episode> episodes = JsonConverter.mapToEpisodes(response);
-        ep = episodes;
-        List<Show> lsh = new ArrayList<Show>();
-        lsh = showChanger.makeShowsWithEpisodes(listOfShows, episodes);
-        listOfShows = lsh;
-//        epTtile = listOfShows.toString();
-
-        //method
-        //List<List<Show>> list = showChanger.makeListOfShowTypes(listOfShows);
-//        listOfWatchingShows = list.get(0);
-//        listOfLaterShows = list.get(1);
-//        listOfCancelledShows = list.get(2);
-//        listOfRemoveShows = list.get(3);
-//        list = null;
+        
+        List<List<Show>> list = ListOfShowsChanger.makeListOfShowTypes(listOfShows);
+        
+        listOfWatchingShows = list.get(0);
+        listOfLaterShows = list.get(1);
+        listOfCancelledShows = list.get(2);
+        listOfRemoveShows = list.get(3);
+       // listOfShows = ListOfShowsChanger.makeShowsWithEpisodes(listOfShows, episodes);
+        list.clear();
+        listOfWatchingShows = ListOfShowsChanger.makeShowsWithEpisodes(listOfWatchingShows, episodes);
 
     }
 
@@ -287,11 +282,11 @@ public class ActionBean
 
     public void manageShowRate(RateEvent rateEvent)
     {
-        String id = rateEvent.getComponent().getId();
-        double rat = ((Double) rateEvent.getRating()).intValue();
+        String rat = String.valueOf(rateEvent.getRating());
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Rate Event", "You rated:" + rat);
         FacesContext.getCurrentInstance().addMessage(null, message);
-        //handler.manageShowRate(showId, rat);
+        //FacesContext.getCurrentInstance().getExternalContext().
+       // handler.manageShowRate(showId, rat);
     }
 
     /**
@@ -302,6 +297,7 @@ public class ActionBean
      */
     //This function should be started on first page onload event, but I don't know how to do it
     //perhaps parameters should be request or/and response
+    /*
     public void checkCookies(Cookie loginCookie, Cookie passwCookie)
     {
         String redirectTo = "";
@@ -332,5 +328,5 @@ public class ActionBean
                 LOG.error("Can't redirect to index.xtml. User isn't in base", ex);
             }
         }
-    }
+    }*/
 }

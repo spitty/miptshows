@@ -17,6 +17,7 @@ body{
 .act_show_view1,
 .act_show_view2{
     margin: 0 auto 0 auto;
+    width: 100%;
 }
 .hello_text{
     font-size: 18px;
@@ -30,4 +31,10 @@ body{
 
 tbody{
     vertical-align: top;
+}
+.image{
+    height: 150px;
+}
+.showText{
+    font-size: 14px;
 }

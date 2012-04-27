@@ -161,7 +161,7 @@ public class ConnectionManager
      * @param showId Chosen show
      * @param rate 
      */
-    public void manageShowRate(int showId, double rate)
+    public void manageShowRate(String showId, String rate)
     {
         String host = HOST + SHOWS + showId + "/" + rate + "/";
         HttpPost httpPost = new HttpPost(host);
