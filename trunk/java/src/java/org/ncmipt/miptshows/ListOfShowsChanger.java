@@ -6,8 +6,8 @@ package org.ncmipt.miptshows;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.ncmipt.miptshows.api.entities.Episode;
 import org.ncmipt.miptshows.api.entities.Show;
-
 
 /**
  * The mission of this class is to do changes with Shows and List<Shows>
@@ -23,19 +23,33 @@ public class ListOfShowsChanger
     private static final String CANCELLED = "cancelled";
     private static final String REMOVE = "remove";
 
-    public void addRefToShow(List<Show> listOfShows)
+    /**
+     * 
+     * @param shows
+     * @param episodes
+     * @return 
+     */
+    public List<Show> makeShowsWithEpisodes(List<Show> shows, List<Episode> episodes)
     {
-        for (Show show : listOfShows)
+        for (Show show : shows)
         {
-            show.getShowId();
-            //get show id
-            //get list of unviewed episodes for this show id
-            //get first unviewed episode from this list
-            //search ref in our base for this episode
-            //add ref to show
+            String showId = show.getShowId();
+            for (Episode ep : episodes)
+            {
+                if (ep.getShowId().equals(showId))
+                {
+                    show.getListOfUnwathedEpisodes().add(ep);
+                }
+            }
         }
+        return shows;
     }
 
+    /**
+     * 
+     * @param listOfShows
+     * @return 
+     */
     public List<List<Show>> makeListOfShowTypes(List<Show> listOfShows)
     {
         //index 0 - WATCHING
@@ -47,7 +61,7 @@ public class ListOfShowsChanger
         {
             String status = show.getWatchStatus();
             // Switch with Strings! Hi J7!
-          
+
 //            switch (status)
 //            {
 //                case WATHCING:
@@ -63,22 +77,24 @@ public class ListOfShowsChanger
 //                    typeList.get(3).add(show);
 //                    break;
 //            }
-            if(status.equals(WATHCING)){
+            if (status.equals(WATHCING))
+            {
                 typeList.get(0).add(show);
             }
-            if(status.equals(LATER)){
+            if (status.equals(LATER))
+            {
                 typeList.get(1).add(show);
             }
-            if(status.equals(CANCELLED)){
+            if (status.equals(CANCELLED))
+            {
                 typeList.get(2).add(show);
             }
-            if(status.equals(REMOVE)){
+            if (status.equals(REMOVE))
+            {
                 typeList.get(3).add(show);
-            }    
+            }
         }
         return typeList;
 
     }
-    
-
 }

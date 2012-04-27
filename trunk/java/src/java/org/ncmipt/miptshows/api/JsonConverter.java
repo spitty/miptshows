@@ -57,10 +57,15 @@ public class JsonConverter
     {
          
         Gson gson = new Gson();
-        Type typeOfT = new TypeToken<List<Episode>>(){}.getType();
-        List<Episode> episodes = gson.fromJson(text,typeOfT);
+        Type typeOfT = new TypeToken<HashMap<String, Episode>>(){}.getType();
+        Map<String, Episode> map = gson.fromJson(text, typeOfT);
+        List<Episode> episodes = new ArrayList<Episode>();
+
+        for (String st : map.keySet())
+        {
+            episodes.add(map.get(st));
+        }
         return episodes;
-        
     }
     //TODO: create json-handler of viewed series
     //TODO: create json-handler of user info

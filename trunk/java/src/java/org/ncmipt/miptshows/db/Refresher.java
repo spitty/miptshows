@@ -27,7 +27,7 @@ public class Refresher
      *
      * @param share
      */
-    public void updateDB(final String share)
+    public static void updateDB(final String share)
     {
         if (share == null)
         {
@@ -83,4 +83,6 @@ public class Refresher
             IOTools.close(dbUtils);
         }
     }
+    
+    
 }

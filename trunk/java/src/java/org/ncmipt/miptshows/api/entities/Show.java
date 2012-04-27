@@ -1,5 +1,6 @@
 package org.ncmipt.miptshows.api.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,17 +19,19 @@ public class Show {
     String image;
     String showStatus;
     String watchStatus;
-    List<Episode> list;
+    List<Episode> listOfUnwathedEpisodes = new ArrayList<Episode>();
 
-    public List<Episode> getList()
+    public List<Episode> getListOfUnwathedEpisodes()
     {
-        return list;
+        return listOfUnwathedEpisodes;
     }
 
-    public void setList(List<Episode> list)
+    public void setListOfUnwathedEpisodes(List<Episode> listOfUnwathedEpisodes)
     {
-        this.list = list;
+        this.listOfUnwathedEpisodes = listOfUnwathedEpisodes;
     }
+
+    
 
     public String getImage()
     {

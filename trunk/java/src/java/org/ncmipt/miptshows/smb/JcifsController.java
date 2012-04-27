@@ -80,16 +80,22 @@ public class JcifsController
         try
         {
             if (!smbFile.exists())
-            {
+            {   
                 if (LOG.isErrorEnabled())
                 {
                     LOG.error("Can't find SMB resource by path " + smbFile.getCanonicalPath());
                 }
                 return;
             }
-
             if (smbFile.isFile())
             {
+                System.out.println("FILE");
+                
+                System.out.println(smbFile.getName());
+                System.out.println(smbFile.getParent());
+                System.out.println(smbFile.getServer());
+                System.out.println(smbFile.getContentLength());
+                
                 handler.onFileFound(new FileObject(smbFile.getName(), smbFile.getParent(),
                         smbFile.getServer(), smbFile.getContentLength()));
             } else if (smbFile.isDirectory())
