@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.ncmipt.miptshows.properties.PropertiesManager;
 
 /**
  *
@@ -34,8 +35,13 @@ public class DBUtils implements Closeable
      
         try
         {
-            Class.forName("oracle.jdbc.OracleDriver");
-            conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1522/orcl", "vlad", "vlad");
+            String driver = PropertiesManager.getDatabaseDriver();
+            String url = PropertiesManager.getDatabaseURL();
+            String username = PropertiesManager.getDatabaseUserName();
+            String password = PropertiesManager.getDatabaseUserPassword();
+           
+            Class.forName(driver);
+            conn = DriverManager.getConnection(url, username, password);
 
         } catch (SQLException e)
         {

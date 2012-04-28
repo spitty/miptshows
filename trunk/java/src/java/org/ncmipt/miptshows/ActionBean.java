@@ -1,7 +1,5 @@
 package org.ncmipt.miptshows;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import org.ncmipt.miptshows.api.ConnectionManager;
 import org.ncmipt.miptshows.api.JsonConverter;
 import java.util.List;
@@ -9,12 +7,10 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import org.apache.http.cookie.Cookie;
 import org.apache.log4j.LogManager;
 import org.ncmipt.miptshows.api.entities.Episode;
 import org.ncmipt.miptshows.api.entities.Show;
 import org.ncmipt.miptshows.api.entities.TopShow;
-import org.ncmipt.miptshows.db.CookiesChecker;
 import org.primefaces.event.RateEvent;
 
 /**
@@ -42,7 +38,6 @@ public class ActionBean
     private ConnectionManager handler;
     private List<Episode> ep;
 
-
     public List<Episode> getEp()
     {
         return ep;
@@ -54,7 +49,7 @@ public class ActionBean
     }
     //private static final CookiesChecker checker = new CookiesChecker();
 
-    // Block of getters & setters
+    /********************** Block of setters and getters ***********************/
     public List<Show> getListOfCancelledShows()
     {
         return listOfCancelledShows;
@@ -175,11 +170,13 @@ public class ActionBean
         this.viewedSeries = viewedSeries;
     }
 
-    // End of the block setters and getters
+    /************************** End of the block setters and getters *****************************/
+    
     public ActionBean()
     {
     }
 
+    
     /**
      * This function make a greeting string using the user's login.
      *
@@ -227,14 +224,13 @@ public class ActionBean
 
         response = handler.getUnwatchedEpisodes();
         List<Episode> episodes = JsonConverter.mapToEpisodes(response);
-        
+
         List<List<Show>> list = ListOfShowsChanger.makeListOfShowTypes(listOfShows);
-        
+
         listOfWatchingShows = list.get(0);
         listOfLaterShows = list.get(1);
         listOfCancelledShows = list.get(2);
         listOfRemoveShows = list.get(3);
-       // listOfShows = ListOfShowsChanger.makeShowsWithEpisodes(listOfShows, episodes);
         list.clear();
         listOfWatchingShows = ListOfShowsChanger.makeShowsWithEpisodes(listOfWatchingShows, episodes);
 
@@ -286,9 +282,8 @@ public class ActionBean
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Rate Event", "You rated:" + rat);
         FacesContext.getCurrentInstance().addMessage(null, message);
         //FacesContext.getCurrentInstance().getExternalContext().
-       // handler.manageShowRate(showId, rat);
+        // handler.manageShowRate(showId, rat);
     }
-
     /**
      *
      * @param loginCookie
@@ -300,33 +295,33 @@ public class ActionBean
     /*
     public void checkCookies(Cookie loginCookie, Cookie passwCookie)
     {
-        String redirectTo = "";
-        String userLogin = loginCookie.getValue();
-        String userPassw = passwCookie.getValue();
-
-        boolean isExist = checker.isUserExistInBase(userLogin, userPassw);
-        if (isExist)
-        {
-            try
-            {
-                this.login = userLogin;
-                this.password = userPassw;
-                redirectTo = "actions";
-                FacesContext.getCurrentInstance().getExternalContext().dispatch(redirectTo);
-
-            } catch (IOException ex)
-            {
-                LOG.error("can't redirect to actions.xhtml", ex);
-            }
-        } else
-        {
-            try
-            {
-                FacesContext.getCurrentInstance().getExternalContext().dispatch(redirectTo);
-            } catch (IOException ex)
-            {
-                LOG.error("Can't redirect to index.xtml. User isn't in base", ex);
-            }
-        }
+    String redirectTo = "";
+    String userLogin = loginCookie.getValue();
+    String userPassw = passwCookie.getValue();
+    
+    boolean isExist = checker.isUserExistInBase(userLogin, userPassw);
+    if (isExist)
+    {
+    try
+    {
+    this.login = userLogin;
+    this.password = userPassw;
+    redirectTo = "actions";
+    FacesContext.getCurrentInstance().getExternalContext().dispatch(redirectTo);
+    
+    } catch (IOException ex)
+    {
+    LOG.error("can't redirect to actions.xhtml", ex);
+    }
+    } else
+    {
+    try
+    {
+    FacesContext.getCurrentInstance().getExternalContext().dispatch(redirectTo);
+    } catch (IOException ex)
+    {
+    LOG.error("Can't redirect to index.xtml. User isn't in base", ex);
+    }
+    }
     }*/
 }
