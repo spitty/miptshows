@@ -1,5 +1,6 @@
 package org.ncmipt.miptshows.api;
 
+import java.util.Collection;
 import org.ncmipt.miptshows.api.entities.Show;
 import org.ncmipt.miptshows.api.entities.TopShow;
 import com.google.gson.Gson;
@@ -63,13 +64,16 @@ public class JsonConverter
         {
         }.getType();
         Map<String, Episode> map = gson.fromJson(text, typeOfT);
+//         List<Episode> values = (List<Episode>) map.values();
         List<Episode> episodes = new ArrayList<Episode>();
 
+        
         for (String st : map.keySet())
         {
             episodes.add(map.get(st));
         }
         return episodes;
+        //return values;
     }
     //TODO: create json-handler of viewed series
     //TODO: create json-handler of user info
