@@ -233,6 +233,7 @@ public class ActionBean
         listOfRemoveShows = list.get(3);
         list.clear();
         listOfWatchingShows = ListOfShowsChanger.makeShowsWithEpisodes(listOfWatchingShows, episodes);
+        //listOfWatchingShows = ListOfShowsChanger.addRefToEpisodes(listOfWatchingShows);
 
     }
 

@@ -13,9 +13,20 @@ public class Episode
     int episodeId;
     String title;
     String showId;
-    int seasonNmber;
+    int seasonNumber;
     int episodeNumber;
     String airDate;
+    String ref;
+
+    public String getRef()
+    {
+        return ref;
+    }
+
+    public void setRef(String ref)
+    {
+        this.ref = ref;
+    }
 
     public String getAirDate()
     {
@@ -47,14 +58,14 @@ public class Episode
         this.episodeNumber = episodeNumber;
     }
 
-    public int getSeasonNmber()
+    public int getSeasonNumber()
     {
-        return seasonNmber;
+        return seasonNumber;
     }
 
-    public void setSeasonNmber(int seasonNmber)
+    public void setSeasonNumber(int seasonNmber)
     {
-        this.seasonNmber = seasonNmber;
+        this.seasonNumber = seasonNmber;
     }
 
     public String getShowId()

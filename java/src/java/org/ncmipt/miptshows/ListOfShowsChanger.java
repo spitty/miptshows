@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.ncmipt.miptshows.api.entities.Episode;
 import org.ncmipt.miptshows.api.entities.Show;
+import org.ncmipt.miptshows.util.TableUtils;
 
 /**
  * The mission of this class is to do changes with Shows and List<Shows>
@@ -17,7 +18,7 @@ import org.ncmipt.miptshows.api.entities.Show;
  */
 public class ListOfShowsChanger
 {
-    
+
     private static final String WATHCING = "watching";
     private static final String LATER = "later";
     private static final String CANCELLED = "cancelled";
@@ -53,7 +54,7 @@ public class ListOfShowsChanger
      */
     public static List<List<Show>> makeListOfShowTypes(List<Show> listOfShows)
     {
-        
+
         List<Show> listOfWatchingShows = new ArrayList<Show>();
         List<Show> listOfLaterShows = new ArrayList<Show>();
         List<Show> listOfCancelledShows = new ArrayList<Show>();
@@ -94,14 +95,36 @@ public class ListOfShowsChanger
             {
                 listOfRemoveShows.add(show);
             }
-            
+
         }
         List<List<Show>> typeList = new ArrayList<List<Show>>();
         typeList.add(listOfWatchingShows);
         typeList.add(listOfLaterShows);
         typeList.add(listOfRemoveShows);
         typeList.add(listOfCancelledShows);
-        
+
         return typeList;
+    }
+
+    /**
+     * 
+     * @param shows
+     * @return 
+     */
+    public static List<Show> addRefToEpisodes(List<Show> shows)
+    {
+        for (Show show : shows)
+        {
+            String ruTitle = show.getRuTitle();
+            String title = show.getTitle();
+
+            List<Episode> episodes = show.getListOfUnwathedEpisodes();
+            for (Episode ep : episodes)
+            {
+                String path = TableUtils.getPathes(title, ep.getSeasonNumber(), ep.getEpisodeNumber());
+                ep.setRef(path);
+            }
+        }
+        return shows;
     }
 }

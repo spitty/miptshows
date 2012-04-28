@@ -103,9 +103,9 @@ public class TableUtils
      * @param episode
      * @return
      */
-    public static List<String> getPathes(String name, String season, String episode)
+    public static String getPathes(String showTitle, int season, int episode)
     {
-        List<String> pathes = new ArrayList<String>();
+       String path = "";
         String query =
                   "select folder_name "
                 + "from folders "
@@ -117,7 +117,7 @@ public class TableUtils
                     + "("
                         + "select file_id "
                         + "from files "
-                        + "where file_name like '" + name + "%"+ season + "%" +episode +"%' "
+                        + "where file_name like '" + showTitle + "%"+ season + "%" +episode +"%' "
                     + ") "
                 + ")";
 
@@ -125,9 +125,9 @@ public class TableUtils
         ResultSet result = dbUtils.executeQuery(query);
         try
         {
-            while (result.next())
+            if (result.next())
             {
-                pathes.add(result.getString(1));
+                path = result.getString(1);
             }
         } catch (SQLException e)
         {
@@ -150,7 +150,7 @@ public class TableUtils
             }
         }
 
-        return pathes;
+        return path;
     }
 
 }
