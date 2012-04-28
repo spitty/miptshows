@@ -64,6 +64,16 @@ select * from servers;
 
 DELETE FROM temp_data;
 
+DELETE FROM files;
+
+DELETE FROM folders;
+
+DELETE FROM files2folders;
+
+DELETE FROM servers;
+
+commit;
+
 SELECT file_name 
 FROM files f JOIN files2folders ftf
 ON F.FILE_ID = ftf.file_id
