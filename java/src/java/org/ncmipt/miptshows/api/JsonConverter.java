@@ -48,16 +48,20 @@ public class JsonConverter
     public static List<TopShow> mapToTopShows(String text)
     {
         Gson gson = new Gson();
-        Type typeOfT = new TypeToken<List<TopShow>>(){}.getType();
+        Type typeOfT = new TypeToken<List<TopShow>>()
+        {
+        }.getType();
         List<TopShow> topList = gson.fromJson(text, typeOfT);
         return topList;
     }
 
     public static List<Episode> mapToEpisodes(String text)
     {
-         
+
         Gson gson = new Gson();
-        Type typeOfT = new TypeToken<HashMap<String, Episode>>(){}.getType();
+        Type typeOfT = new TypeToken<HashMap<String, Episode>>()
+        {
+        }.getType();
         Map<String, Episode> map = gson.fromJson(text, typeOfT);
         List<Episode> episodes = new ArrayList<Episode>();
 
