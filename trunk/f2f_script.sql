@@ -29,8 +29,8 @@ exception when others then if sqlcode = -02289 then null; else raise; end if; en
 CREATE TABLE files 
 (
     file_id NUMBER(15),
-    file_name VARCHAR2(200) not null,
-    file_size NUMBER(15),
+    file_name VARCHAR2(200) NOT NULL UNIQUE,
+    file_size NUMBER(15) NOT NULL,
     CONSTRAINT files_pk PRIMARY KEY(file_id)  
 );
 
@@ -43,8 +43,8 @@ CREATE TABLE folders (
 
 CREATE TABLE files2folders 
 (
-    file_id NUMBER(15) not null,
-    folder_id NUMBER(15) not null,
+    file_id NUMBER(15) NOT NULL,
+    folder_id NUMBER(15) NOT NULL,
     CONSTRAINT file_fk FOREIGN KEY(file_id) REFERENCES files(file_id),
     CONSTRAINT folder_fk FOREIGN KEY(folder_id) REFERENCES folders(folder_id),
     CONSTRAINT files2folder_pk PRIMARY KEY(file_id, folder_id)  
@@ -54,7 +54,7 @@ CREATE TABLE files2folders
 CREATE TABLE servers 
 (
     server_id NUMBER(15),
-    server VARCHAR2(200) not null,
+    server_name VARCHAR2(200) NOT NULL UNIQUE,
     CONSTRAINT server_pk PRIMARY KEY(server_id)  
 );
 
@@ -67,9 +67,9 @@ CREATE SEQUENCE server_id_generator;
 CREATE TABLE temp_data
 (
     file_name VARCHAR2(200),
-    folder_name VARCHAR2(200) not null,
-    server VARCHAR2(200) not null,
-    file_size NUMBER(15) not null,
+    folder_name VARCHAR2(200) NOT NULL,
+    server VARCHAR2(200) NOT NULL,
+    file_size NUMBER(15) NOT NULL,
     CONSTRAINT temp_data_pk PRIMARY KEY (file_name)
 );
 
