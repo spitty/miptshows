@@ -68,7 +68,7 @@ public class DBUtils implements Closeable
         try
         {
             pstat = conn.prepareStatement("INSERT INTO temp_data "
-                    + "(file_name, folder_name, file_size, server) VALUES (?, ?, ?, ?)");
+                    + "(file_name, folder_name, file_size, server_name) VALUES (?, ?, ?, ?)");
         } catch (SQLException e)
         {
             if (LOG.isErrorEnabled())

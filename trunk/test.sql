@@ -43,13 +43,13 @@ MERGE
 
 MERGE
     INTO servers s
-    USING (SELECT UNIQUE server FROM temp_data) td
-    ON (td.server = s.server)
+    USING (SELECT UNIQUE server_name FROM temp_data) td
+    ON (td.server_name = s.server_name)
     WHEN NOT MATCHED THEN
         INSERT
-            (s.server_id, s.server)
+            (s.server_id, s.server_name)
         VALUES
-            (server_id_generator.nextval, td.server)
+            (server_id_generator.nextval, td.server_name)
 ;
   
 select * from temp_data;
