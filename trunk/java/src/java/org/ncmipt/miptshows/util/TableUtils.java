@@ -4,6 +4,8 @@ package org.ncmipt.miptshows.util;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import java.util.List;
@@ -19,7 +21,6 @@ public class TableUtils
     /**
      *
      * @param dbUtils
-     * @return
      */
     public static void merge(DBUtils dbUtils)
     {
@@ -27,7 +28,7 @@ public class TableUtils
         {
             throw new IllegalArgumentException("dbUtils cannot be null");
         }
-        
+
         dbUtils.execute(
                 "MERGE "
               + "INTO files f "
@@ -35,11 +36,13 @@ public class TableUtils
               + "ON (td.file_name = f.file_name) "
               + "WHEN NOT MATCHED THEN "
                   + "INSERT "
-                      + "(f.file_id, f.file_name, f.file_size) "
+                      + "(f.file_id, f.file_name, f.file_size, f.last_change_date) "
                   + "VALUES "
-                      + "(file_id_generator.nextval, td.file_name, td.file_size) ");
-        
-                
+                      + "(file_id_generator.nextval, td.file_name, td.file_size, sysdate) "
+              + "WHEN MATCHED THEN "
+                  + "UPDATE SET f.last_change_date = sysdate");
+
+
 
         dbUtils.execute(
                 "MERGE "
@@ -51,8 +54,8 @@ public class TableUtils
                         + "(f.folder_id, f.folder_name) "
                     + "VALUES "
                         + "(folder_id_generator.nextval, td.folder_name) ");
-        
-        
+
+
 
         dbUtils.execute(
                 "MERGE "
@@ -70,8 +73,8 @@ public class TableUtils
                         + "(f2f.file_id, f2f.folder_id) "
                     + "VALUES "
                         + "(t.file_id, t.folder_id)");
-          
-        
+
+
 
         dbUtils.execute(  "MERGE "
                         + "INTO servers s "
@@ -82,41 +85,41 @@ public class TableUtils
                                 + "(s.server_id, s.server_name ) "
                             + "VALUES "
                                 + "(server_id_generator.nextval, td.server_name )");
-       
+
     }
 
     /**
      *
      * @param dbUtils
-     * @return
      */
     public static void clearTempTable(DBUtils dbUtils)
     {
         dbUtils.execute("DELETE FROM temp_data");
     }
-    
+
     /**
      *
-     * @param name
+     * @param showTitle
+     * @param ruTitle
      * @param season
      * @param episode
      * @return
      */
-    public static String getPathes(String showTitle, int season, int episode)
+    public static List<String> getPathes(String showTitle, String ruTitle, int season, int episode)
     {
-       String path = "";
+        List<String> pathes = new ArrayList<String>();
         String query =
-                  "select folder_name "
-                + "from folders "
-                + "where folder_id in "
+                  "SELECT folder_name "
+                + "FROM folders "
+                + "WHERE folder_id IN "
                 + "("
-                    + "select folder_id "
-                    + "from files2folders "
-                    + "where file_id in "
+                    + "SELECT folder_id "
+                    + "FROM files2folders "
+                    + "WHERE file_id IN "
                     + "("
-                        + "select file_id "
-                        + "from files "
-                        + "where file_name like '" + showTitle + "%"+ season + "%" +episode +"%' "
+                        + "SELECT file_id "
+                        + "FROM files "
+                        + "WHERE file_name LIKE 'Tractor%' "
                     + ") "
                 + ")";
 
@@ -124,15 +127,16 @@ public class TableUtils
         ResultSet result = dbUtils.executeQuery(query);
         try
         {
-            if (result.next())
+            while(result.next())
             {
-                path = result.getString(1);
+                System.out.println("HELLO!");
+                pathes.add(result.getString(1));
             }
         } catch (SQLException e)
         {
             if (LOG.isErrorEnabled())
             {
-                LOG.error("Cannot merge servers and temp_data", e);
+                LOG.error("Cannot execute select for searching pathes", e);
             }
         } finally
         {
@@ -149,7 +153,51 @@ public class TableUtils
             }
         }
 
-        return path;
+        return pathes;
     }
 
+    /**
+     *
+     * @param dbUtils
+     * @param rate - the rate of deleting files.
+     */
+    public static void clearOldFiles(DBUtils dbUtils, int rate)
+    {
+        String query = "DELETE FROM files "
+                     + "WHERE sysdate - last_change_date > " + rate;
+        dbUtils.execute(query);
+    }
+
+    /**
+     *
+     * @param dbUtils
+     */
+    public static void clearEmptyFolders(DBUtils dbUtils)
+    {
+        String query =
+                "SELECT count(*), folder_id "
+              + "FROM files2folders "
+              + "WHERE folder_id IN "
+              + "( "
+                  + "SELECT folder_id "
+                  + "FROM folders "
+              + ")";
+
+        ResultSet result = dbUtils.executeQuery(query);
+        try
+        {
+            while(result.next())
+            {
+                if (result.getInt(1) == 0)
+                {
+                    query = "DELETE FROM folders "
+                          + "WHERE folder_id = " + result.getInt(2);
+                    dbUtils.execute(query);
+                }
+            }
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(TableUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

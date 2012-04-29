@@ -20,28 +20,28 @@ public class JcifsTester
 
     public static void main(String[] args) throws Exception
     {
-        
+        /*
         JcifsController jcc = new JcifsController();
-        
+
         List<String> list = jcc.getListOfFiles("smb://video.campus/video/all/by tag/quality/1080p/500 Days of Summer [500 дней лета] (2009)[movie]/1080p.en,ru/");
-        for (String str: list) 
+        for (String str: list)
         {
             System.out.println(str);
         }
-        
+
         /*
         SmbFile sf = new SmbFile("smb://video.campus/video/all/by tag/quality/1080p/500 Days of Summer [500 дней лета] (2009)[movie]/1080p.en,ru/");
         SmbFile[] sfs = sf.listFiles();
-        
-        
+
+
         for(SmbFile s: sfs){
             System.out.println(s.getName());
         }
         */
-        
-        
+
+
         /*HttpClient hc = new DefaultHttpClient();
-        HttpServer hs = new         
+        HttpServer hs = new
     /*SmbFile[] servers = workgroup.listFiles();
     for (int i = 0; i < servers.length; i++) {
       long startTime = System.currentTimeMillis();
@@ -52,7 +52,7 @@ public class JcifsTester
       System.out.println(servers[i] + " listFiles() took " +
             (System.currentTimeMillis() - startTime) + " milliseconds");
     }
-       /* SmbFile file = new SmbFile("smb:\\\\video.campus\\video\\all\\by tag\\quality\\1080p\\"); 
+       /* SmbFile file = new SmbFile("smb:\\\\video.campus\\video\\all\\by tag\\quality\\1080p\\");
 		SmbFile[] files = file.listFiles();
 		System.out.println("acssed done");
 
@@ -72,13 +72,13 @@ public class JcifsTester
         /*boolean b = jcc.isExist("smb:\\\\video.campus\\video\\all\\by tag\\quality\\1080p\\500 Days of Summer [500 дней лета] (2009)[movie]\\1080p.en,ru");
         System.out.println(b);
         System.out.println(jcc.isDirectory("smb:\\\\video.campus\\video\\all\\by tag\\quality\\1080p\\500 Days of Summer [500 дней лета] (2009)[movie]\\1080p.en,ru\\about.txt"));
-        
+
         /*SmbFile sf = new SmbFile("smb:\\\\video.campus\\video\\all\\by tag\\quality\\1080p\\500 Days of Summer [500 дней лета] (2009)[movie]\\1080p.en,ru\\about.txt");
         System.out.println(sf.getInputStream());
         /*
         System.out.println(
         sf.getLastModified());
-         * 
+         *
          */
     }
 }

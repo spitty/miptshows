@@ -28,18 +28,17 @@ public class DBUtils implements Closeable
 
     /**
      * Constructor of DBUtils class. It executes connection to DB and keeps result
-     * @return an instance of current class
      */
     public DBUtils()
     {
-     
+
         try
         {
             String driver = PropertiesManager.getDatabaseDriver();
             String url = PropertiesManager.getDatabaseURL();
             String username = PropertiesManager.getDatabaseUserName();
             String password = PropertiesManager.getDatabaseUserPassword();
-           
+
             Class.forName(driver);
             conn = DriverManager.getConnection(url, username, password);
 
@@ -118,7 +117,6 @@ public class DBUtils implements Closeable
         {
             Statement stat = conn.createStatement();
             result = stat.executeUpdate(query);
-            stat.close();
         } catch (SQLException e)
         {
             if (LOG.isErrorEnabled())
@@ -142,7 +140,6 @@ public class DBUtils implements Closeable
         {
             Statement stat = conn.createStatement();
             result = stat.executeQuery(query);
-            stat.close();
         } catch (SQLException e)
         {
             if (LOG.isErrorEnabled())
@@ -157,22 +154,19 @@ public class DBUtils implements Closeable
     /**
      *
      * @param query
-     * @return
      */
-    public boolean execute(final String query)
+    public void execute(final String query)
     {
         if (query == null)
         {
             throw new IllegalArgumentException("query cannot be null");
         }
 
-        boolean isSuccess = false;
-
         try
         {
             Statement stat = conn.createStatement();
             stat.execute(query);
-            stat.close();
+            
         } catch (SQLException e)
         {
             if (LOG.isErrorEnabled())
@@ -180,8 +174,6 @@ public class DBUtils implements Closeable
                 LOG.error("Smth wrong with DB", e);
             }
         }
-
-        return isSuccess;
     }
 
     @Override

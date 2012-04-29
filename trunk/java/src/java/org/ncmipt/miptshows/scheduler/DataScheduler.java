@@ -19,6 +19,12 @@ public class DataScheduler
 
     private static final org.apache.log4j.Logger LOG = LogManager.getLogger(DataScheduler.class);
 
+    static
+    {
+        System.out.println("Static block!");
+        main(new String[0]);
+    }
+
     public static void main(String[] args)
     {
         //Create JobDetail

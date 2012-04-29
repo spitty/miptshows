@@ -4,7 +4,7 @@
  */
 package org.ncmipt.miptshows.scheduler;
 
-import org.ncmipt.miptshows.db.Refresher;
+import org.ncmipt.miptshows.db.Updater;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -22,5 +22,5 @@ public class RunMeJob implements Job
         System.out.println("Hello!");
         //Refresher.updateDB("my_share");
     }
-    
+
 }
