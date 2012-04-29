@@ -18,10 +18,10 @@ import org.ncmipt.miptshows.util.IOTools;
  *
  * @author Ivanov Roman, 917th group, MIPT
  */
-public class Refresher
+public class Updater
 {
 
-    private static final Log LOG = LogFactory.getLog(Refresher.class);
+    private static final Log LOG = LogFactory.getLog(Updater.class);
 
     /**
      *
@@ -83,6 +83,6 @@ public class Refresher
             IOTools.close(dbUtils);
         }
     }
-    
-    
+
+
 }

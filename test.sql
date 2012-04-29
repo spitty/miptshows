@@ -1,12 +1,15 @@
+
 MERGE
     INTO files f
     USING temp_data td
     ON (td.file_name = f.file_name)
     WHEN NOT MATCHED THEN
         INSERT
-            (f.file_id, f.file_name, f.file_size)
+            (f.file_id, f.file_name, f.file_size, f.last_change_date)
         VALUES
-            (file_id_generator.nextval, td.file_name, td.file_size)
+            (file_id_generator.nextval, td.file_name, td.file_size, sysdate)
+    WHEN MATCHED THEN
+        UPDATE SET f.last_change_date = sysdate
 ;
 
 MERGE
@@ -52,6 +55,42 @@ MERGE
             (server_id_generator.nextval, td.server_name)
 ;
   
+
+
+SELECT count(*), folder_id
+FROM files2folders
+WHERE folder_id IN
+    (
+    SELECT folder_id 
+    FROM files2folders
+    WHERE file_id IN
+        (
+        SELECT file_id
+        FROM files
+        WHERE file_name = 'The Simpsons [s01e01].txt'
+        OR file_name = 'House [s01e01].txt'
+        )
+    )
+GROUP BY folder_id;
+
+DELETE FROM files
+WHERE sysdate - last_change_date > 0.011;
+
+SELECT to_char(sysdate, 'DD')
+FROM dual;
+
+SELECT sysdate - last_change_date
+FROM files;
+
+SELECT count(*), folder_id
+FROM files2folders
+WHERE folder_id IN
+(
+    SELECT folder_id
+    FROM folders
+)
+GROUP BY folder_id;
+
 select * from temp_data;
           
 select * from files;
@@ -82,17 +121,20 @@ WHERE ftf.folder_id = 10;
 
 
 select folder_name
-       from folders
-       where folder_id in
-                (
-                select folder_id
-                from files2folders
-                where file_id in
-                    (
-                    select file_id
-                    from files
-                    where file_name like 'f%1%'
-                    )
-                )
-;
+    from folders
+    where folder_id in
+        (
+        select folder_id
+        from files2folders
+        where file_id in
+            (
+            select file_id
+            from files
+            where file_name like 'Tractor Man%'
+            )
+        );
+        
+select file_id
+from files
+where file_name like 'Tractor Man%'
 

@@ -28,7 +28,7 @@ public class ListOfShowsChanger
      * This function adds in each show its unwatched episodes
      * @param shows
      * @param episodes
-     * @return 
+     * @return
      */
     public static List<Show> makeShowsWithEpisodes(List<Show> shows, List<Episode> episodes)
     {
@@ -48,9 +48,9 @@ public class ListOfShowsChanger
 
     /**
      * makeListOfShowTypes separates shows by status.
-     * 
+     *
      * @param listOfShows
-     * @return 
+     * @return
      */
     public static List<List<Show>> makeListOfShowTypes(List<Show> listOfShows)
     {
@@ -62,23 +62,7 @@ public class ListOfShowsChanger
         for (Show show : listOfShows)
         {
             String status = show.getWatchStatus();
-            // Switch with Strings! Hi J7!
 
-//            switch (status)
-//            {
-//                case WATHCING:
-//                    typeList.get(0).add(show);
-//                    break;
-//                case LATER:
-//                    typeList.get(1).add(show);
-//                    break;
-//                case CANCELLED:
-//                    typeList.get(2).add(show);
-//                    break;
-//                case REMOVE:
-//                    typeList.get(3).add(show);
-//                    break;
-//            }
             if (status.equals(WATHCING))
             {
                 listOfWatchingShows.add(show);
@@ -107,22 +91,23 @@ public class ListOfShowsChanger
     }
 
     /**
-     * 
+     *
      * @param shows
-     * @return 
+     * @return
      */
     public static List<Show> addRefToEpisodes(List<Show> shows)
     {
         for (Show show : shows)
         {
-            String ruTitle = show.getRuTitle();
-            String title = show.getTitle();
-
             List<Episode> episodes = show.getListOfUnwathedEpisodes();
             for (Episode ep : episodes)
             {
-                String path = TableUtils.getPathes(title, ep.getSeasonNumber(), ep.getEpisodeNumber());
-                ep.setRef(path);
+                List<String> pathes = TableUtils.getPathes(show.getRuTitle(),
+                        show.getTitle(), ep.getSeasonNumber(), ep.getEpisodeNumber());
+                for (String path : pathes)
+                {
+                    ep.setRef(path);
+                }
             }
         }
         return shows;
