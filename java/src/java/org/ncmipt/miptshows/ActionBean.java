@@ -7,11 +7,15 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.FacesEvent;
+import javax.faces.event.ValueChangeEvent;
 import org.apache.log4j.LogManager;
 import org.ncmipt.miptshows.api.entities.Episode;
 import org.ncmipt.miptshows.api.entities.Show;
 import org.ncmipt.miptshows.api.entities.TopShow;
 import org.primefaces.event.RateEvent;
+import org.primefaces.event.ToggleEvent;
 
 /**
  *
@@ -171,12 +175,10 @@ public class ActionBean
     }
 
     /************************** End of the block setters and getters *****************************/
-    
     public ActionBean()
     {
     }
 
-    
     /**
      * This function make a greeting string using the user's login.
      *
@@ -220,6 +222,7 @@ public class ActionBean
     {
 
         String response = handler.getListOfShows();
+        resp = response;
         listOfShows = JsonConverter.mapToShows(response);
 
         response = handler.getUnwatchedEpisodes();
@@ -277,13 +280,45 @@ public class ActionBean
         viewedSeries = handler.getListOfViewedSeries(ShowId);
     }
 
+    /**
+     * This function change rate of chosen show
+     * @param rateEvent 
+     */
     public void manageShowRate(RateEvent rateEvent)
     {
-        String rat = String.valueOf(rateEvent.getRating());
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Rate Event", "You rated:" + rat);
+         System.out.println("123123123");
+        String showId = rateEvent.getComponent().getAttributes().get("converterMessage").toString();
+        int rate = ((Double) rateEvent.getRating()).intValue();
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Manage show rate", "You rated:" + rate);
+        handler.manageShowRate(showId, rate);
         FacesContext.getCurrentInstance().addMessage(null, message);
-        //FacesContext.getCurrentInstance().getExternalContext().
-        // handler.manageShowRate(showId, rat);
+
+    }
+
+    /**
+     * 
+     * @param rateEvent 
+     */
+    public void manageEpisodeRate(RateEvent rateEvent)
+    {
+       
+        String episodeId = rateEvent.getComponent().getAttributes().get("converterMessage").toString();
+        int rate = ((Double) rateEvent.getRating()).intValue();
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Manage episode rate", "You rated:" + rate);
+        handler.manageShowRate(episodeId, rate);
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+
+    public void checkEpisode(FacesEvent event)
+    {
+        System.out.println("123!!!");
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Manage episode rate", "You rated:" );
+//        String t = event.getComponent().toString();
+//        int showId = Integer.valueOf(event.getComponent().getAttributes().get("dir").toString());
+//        String rate = event.getComponent().getChildren().get(1).getAttributes().get("value").toString();
+//        System.out.println(t);
+//       C System.out.println(t);
+        
     }
     /**
      *

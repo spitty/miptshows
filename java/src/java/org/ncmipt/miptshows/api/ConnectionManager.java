@@ -6,8 +6,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -156,15 +159,61 @@ public class ConnectionManager
 //        return sb.toString();
 //    }
     /**
-     * This function sets the value of rate for chosen show
+     * This function sets the value of rate for chosen show identified by show id
      * 
-     * @param showId Chosen show
+     * @param showId id of chosen show
      * @param rate 
      */
-    public void manageShowRate(String showId, String rate)
+    public void manageShowRate(String showId, int rate)
     {
-        String host = HOST + SHOWS + showId + "/" + rate + "/";
+        String host = HOST + PROFILE + SHOWS + showId + "/rate/" + rate;
         HttpPost httpPost = new HttpPost(host);
+        try
+        {
+            HttpResponse response = httpClient.execute(httpPost);
+        } catch (IOException ex)
+        {
+            LOG.error("Can't manage show rate", ex);
+        }
+
+    }
+
+    /**
+     * This function sets the value of rate for chosen show identified by show id
+     * @param episodeId id of chosen episode
+     * @param rate 
+     */
+    public void manageEpisodeRate(String episodeId, int rate)
+    {
+        //http://api.myshows.ru/profile/episodes/rate/5/291461
+        //String host = HOST + PROFILE + SHOWS + showId + "/rate/" + rate;
+        String host = "http://api.myshows.ru/profile/episodes/rate/" + rate + "/" + episodeId;
+        HttpPost httpPost = new HttpPost(host);
+        try
+        {
+            HttpResponse response = httpClient.execute(httpPost);
+        } catch (IOException ex)
+        {
+            LOG.error("Can't manage episode rate", ex);
+        }
+    }
+
+    /**
+     * 
+     * @param episodeId
+     * @param rate 
+     */
+    public void checkEpisode(int episodeId, int rate)
+    {
+        String host = "http://api.myshows.ru/profile/episodes/rate/" + rate + "/" + episodeId;
+        HttpPost httpPost = new HttpPost(host);
+        try
+        {
+            HttpResponse response = httpClient.execute(httpPost);
+        } catch (IOException ex)
+        {
+            LOG.error("Can't check episode", ex);
+        }
     }
 
     /**
@@ -213,8 +262,7 @@ public class ConnectionManager
         }
         return sb.toString();
     }
-    
-   
+
     /**
      * 
      * @return 
