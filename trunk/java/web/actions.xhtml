@@ -13,7 +13,7 @@
         <h:outputText value="#{actionBean.greeting()}" styleClass="hello_text"></h:outputText>
         <h:form styleClass="act_show_view1" >
             <p:growl id="messages" showDetail="true"/>
-            <p:dataGrid id="list" value="#{actionBean.listOfWatchingShows}" columns="3" var="show"
+            <p:dataGrid id="list" value="#{actionBean.listOfWatchingShows}" columns="10" var="show"
                         rows="12" paginator="true"
                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                         rowsPerPageTemplate="9,12,15"
@@ -26,18 +26,24 @@
                             <h:outputText value=""/>
                             <h:outputText value="Статус сериала: #{show.showStatus}" styleClass="showText"/>
                             <h:outputText value="Всего серий: #{show.totalEpisodes}" styleClass="showText"/>
-                            <h:outputText value="Статус просмотра: #{show.watchStatus}" styleClass="showText"/>    
+<!--                            <h:outputText value="Статус просмотра: #{show.watchStatus}" styleClass="showText"/>    -->
                             <p:growl id="growl" showDetail="true" sticky="true"/>
-                            <p:rating value="#{show.rating}" disabled="false">  
+                            <p:rating   value="#{show.rating}" disabled="false" converterMessage="#{show.showId}">
                                 <p:ajax event="rate" listener="#{actionBean.manageShowRate}" update="growl" /> 
                             </p:rating> 
-                            <h:outputText value="Unwatched Episodes:"/>
+                            <h:outputText value="Непросмотренные эпизоды:"/>
                             <p:dataList value="#{show.listOfUnwathedEpisodes}" var="episode" itemType="disc" paginator="true" 
                                         paginatorTemplate=" {CurrentPageReport} {PreviousPageLink} {PageLinks} {NextPageLink} {RowsPerPageDropdown}"
                                         rows="3"
                                         rowsPerPageTemplate="3,9,15,20,50"
                                         paginatorPosition="top">  
-                                <h:outputLink value="#{episode.title}" title="local reference on #{episode.title}"> #{episode.title}</h:outputLink>  
+
+                                <h:outputLink value="#{episode.title}" title="local reference on #{episode.title}"> #{episode.title} #{episode.seasonNumber}сезон #{episode.episodeNumber}серия
+                                </h:outputLink> 
+                                <h:outputText value="Оцените эпизод: "/>
+                                
+                                
+
                             </p:dataList>  
                         </h:panelGrid>
                     </p:panel>
