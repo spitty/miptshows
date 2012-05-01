@@ -142,7 +142,7 @@ public class TableUtils
             while (result.next())
             {
 //                System.out.println("HELLO!");
-                pathes.add(result.getString(1));
+                pathes.add(result.getString(1)+result.getString(2));
             }
         } catch (SQLException e)
         {
