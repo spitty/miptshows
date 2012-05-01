@@ -1,12 +1,19 @@
 package org.ncmipt.miptshows.util;
 
 import java.io.Closeable;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ncmipt.miptshows.properties.PropertiesManager;
@@ -34,27 +41,41 @@ public class DBUtils implements Closeable
 
         try
         {
-            String driver = PropertiesManager.getDatabaseDriver();
-            String url = PropertiesManager.getDatabaseURL();
-            String username = PropertiesManager.getDatabaseUserName();
-            String password = PropertiesManager.getDatabaseUserPassword();
+//            String driver = PropertiesManager.getDatabaseDriver();
+//            String url = PropertiesManager.getDatabaseURL();
+//            String username = PropertiesManager.getDatabaseUserName();
+//            String password = PropertiesManager.getDatabaseUserPassword();
+            
+            String JNDIDataSourceName = PropertiesManager.getJNDIDataSourceName();
+            InitialContext context = new InitialContext();
+            DataSource source = (DataSource) context.lookup("jdbc/miptshows");
+            conn = source.getConnection();
+            File file = new File(".");
+            System.out.println( file.getPath());
+ 
+//            Class.forName(driver);
+//            conn = DriverManager.getConnection(url, username, password);
 
-            Class.forName(driver);
-            conn = DriverManager.getConnection(url, username, password);
-
-        } catch (SQLException e)
+        }/* catch (ClassNotFoundException ex)
         {
-            if (LOG.isErrorEnabled())
-            {
-                LOG.error("Smth wrong with DB", e);
-            }
-        } catch (ClassNotFoundException e)
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }  */catch (NamingException ex)
+        {
+            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }  catch (SQLException e)
         {
             if (LOG.isErrorEnabled())
             {
                 LOG.error("Smth wrong with DB", e);
             }
         }
+//        catch (ClassNotFoundException e)
+//        {
+//            if (LOG.isErrorEnabled())
+//            {
+//                LOG.error("Smth wrong with DB", e);
+//            }
+//        }
     }
 
     /**
@@ -67,7 +88,7 @@ public class DBUtils implements Closeable
         try
         {
             pstat = conn.prepareStatement("INSERT INTO temp_data "
-                    + "(file_name, folder_name, file_size, server_name) VALUES (?, ?, ?, ?)");
+                    + "(file_name, folder_name, file_size, server_name) VALUES (lower(?), ?, ?, ?)");
         } catch (SQLException e)
         {
             if (LOG.isErrorEnabled())
@@ -166,7 +187,7 @@ public class DBUtils implements Closeable
         {
             Statement stat = conn.createStatement();
             stat.execute(query);
-            
+
         } catch (SQLException e)
         {
             if (LOG.isErrorEnabled())
@@ -182,4 +203,3 @@ public class DBUtils implements Closeable
         IOTools.close(conn);
     }
 }
-

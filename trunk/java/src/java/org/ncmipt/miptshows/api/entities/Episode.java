@@ -4,26 +4,36 @@
  */
 package org.ncmipt.miptshows.api.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Vlad
  */
 public class Episode
 {
+
     int episodeId;
     String title;
     String showId;
     int seasonNumber;
     int episodeNumber;
     String airDate;
-    String ref;
+    List<String> ref = new ArrayList<String>();
 
-    public String getRef()
+    public Episode()
+    {
+        ref = new ArrayList<String>();
+        ref.add("Ссылка не найдена");
+    }
+
+    public List<String> getRef()
     {
         return ref;
     }
 
-    public void setRef(String ref)
+    public void setRef(List<String> ref)
     {
         this.ref = ref;
     }
@@ -87,5 +97,4 @@ public class Episode
     {
         this.title = title;
     }
-    
 }

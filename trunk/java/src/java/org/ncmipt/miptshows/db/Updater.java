@@ -1,13 +1,19 @@
 package org.ncmipt.miptshows.db;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.ncmipt.miptshows.util.TableUtils;
 import java.net.MalformedURLException;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.PropertyConfigurator;
+import org.ncmipt.miptshows.properties.PropertiesManager;
 import org.ncmipt.miptshows.smb.FileFindHandler;
 import org.ncmipt.miptshows.smb.FileFindHandlerDB;
 import org.ncmipt.miptshows.smb.JcifsController;
@@ -84,5 +90,5 @@ public class Updater
         }
     }
 
-
+    
 }

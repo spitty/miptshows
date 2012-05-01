@@ -14,6 +14,7 @@ import org.quartz.impl.triggers.CronTriggerImpl;
  *
  * @author Vlad
  */
+
 public class DataScheduler
 {
 

@@ -28,7 +28,6 @@ public class PropertiesManager
         {
             XMLConfiguration conf = new XMLConfiguration(PATH);
             databaseDriver = conf.getString("database.driver");
-            return databaseDriver;
         } catch (ConfigurationException ex)
         {
             LOG.error("Can't read properties", ex);
@@ -47,7 +46,6 @@ public class PropertiesManager
         {
             XMLConfiguration conf = new XMLConfiguration(PATH);
             databaseUserName = conf.getString("database.username");
-            return databaseUserName;
         } catch (ConfigurationException ex)
         {
             LOG.error("Can't read properties", ex);
@@ -66,7 +64,6 @@ public class PropertiesManager
         {
             XMLConfiguration conf = new XMLConfiguration(PATH);
             databaseUserPassword = conf.getString("database.password");
-            return databaseUserPassword;
         } catch (ConfigurationException ex)
         {
             LOG.error("Can't read properties", ex);
@@ -85,7 +82,6 @@ public class PropertiesManager
         {
             XMLConfiguration conf = new XMLConfiguration(PATH);
             databaseURL = conf.getString("database.url");
-            return databaseURL;
         } catch (ConfigurationException ex)
         {
             LOG.error("Can't read properties", ex);
@@ -104,7 +100,6 @@ public class PropertiesManager
         {
             XMLConfiguration conf = new XMLConfiguration(PATH);
             schedulerExpression = conf.getString("scheduler.expression");
-            return schedulerExpression;
         } catch (ConfigurationException ex)
         {
             LOG.error("Can't read properties", ex);
@@ -123,7 +118,6 @@ public class PropertiesManager
         {
             XMLConfiguration conf = new XMLConfiguration(PATH);
             applicationName = conf.getString("general.applicationName");
-            return applicationName;
         } catch (ConfigurationException ex)
         {
             LOG.error("Can't read properties", ex);
@@ -142,11 +136,46 @@ public class PropertiesManager
         {
             XMLConfiguration conf = new XMLConfiguration(PATH);
             shares = conf.getList("scanResources.share", shares);
-            return shares;
         } catch (ConfigurationException ex)
         {
             LOG.error("Can't read properties", ex);
         }
         return shares;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public static double getDeletingRate()
+    {
+        double ttl = 0;
+        try
+        {
+            XMLConfiguration conf = new XMLConfiguration(PATH);
+            ttl = Double.valueOf(conf.getString("database.deletingRate"));
+        } catch (ConfigurationException ex)
+        {
+            LOG.error("Can't read properties", ex);
+        }
+        return ttl;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public static String getJNDIDataSourceName()
+    {
+        String JNDIDataSourceName = "";
+        try
+        {
+            XMLConfiguration conf = new XMLConfiguration(PATH);
+            JNDIDataSourceName = conf.getString("database.JNDIDataSourceName");
+        } catch (ConfigurationException ex)
+        {
+            LOG.error("Can't read properties", ex);
+        }
+        return JNDIDataSourceName;
     }
 }
