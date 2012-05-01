@@ -74,7 +74,7 @@ WHERE folder_id IN
 GROUP BY folder_id;
 
 DELETE FROM files
-WHERE sysdate - last_change_date > 0.011;
+WHERE sysdate - last_change_date > 0.001;
 
 SELECT to_char(sysdate, 'DD')
 FROM dual;
@@ -82,14 +82,25 @@ FROM dual;
 SELECT sysdate - last_change_date
 FROM files;
 
-SELECT count(*), folder_id
-FROM files2folders
-WHERE folder_id IN
+
+
+DELETE FROM folders 
+WHERE folder_id NOT IN
 (
     SELECT folder_id
-    FROM folders
+    FROM files2folders
 )
-GROUP BY folder_id;
+;
+
+SELECT folder_id FROM folders 
+WHERE folder_id NOT IN
+(
+    SELECT folder_id
+    FROM files2folders
+)
+;
+
+INSERT INTO folders (folder_id, folder_name) VALUES (4,'smb://natalie.campus/incoming/! For/ForMiptShows/MiptShowsTest/1234/');
 
 select * from temp_data;
           
@@ -120,21 +131,60 @@ WHERE ftf.folder_id = 10;
 
 
 
-select folder_name
-    from folders
-    where folder_id in
-        (
-        select folder_id
-        from files2folders
-        where file_id in
-            (
-            select file_id
-            from files
-            where file_name like 'Tractor Man%'
-            )
-        );
-        
+SELECT DISTINCT fol.folder_name, f.file_name
+    FROM folders fol, files f, files2folders f2f
+    WHERE f2f.file_id = f.file_id 
+    AND f2f.folder_id = fol.folder_id
+    AND f.file_name LIKE 
+    ''||regexp_replace('House','[^a-zà-ÿ¸0-9]+','%')||'%s'||lpad(1, 2, '0')||'%e'||lpad(1, 2, '0')||'%'
+    OR f.file_name LIKE 
+    ''||regexp_replace('House','[^a-zà-ÿ¸0-9]+','%')||'%'||1||'x'||lpad(1, 2, '0')||'%'
+    OR f.file_name LIKE 
+    ''||regexp_replace('House','[^a-zà-ÿ¸0-9]+','%')||'%'||1||''||lpad(1, 2, '0')||'%'
+ ;
+
+
+
+SELECT file_name FROM files
+WHERE file_name LIKE '%t%'
+;       
+
+SELECT ''||regexp_replace('House','[^a-zà-ÿ¸0-9]+','%')||'%s'||lpad(1, 2, '0')||'%e'||lpad(1, 2, '0')||'%' 
+as searchstr FROM files;
+
+
+;
+
 select file_id
 from files
 where file_name like 'Tractor Man%'
 
+
+/*
+DELETE FROM folders 
+WHERE folder_id IN
+(
+    SELECT  folder_id
+    FROM files2folders
+    WHERE folder_id IN
+    (
+        SELECT folder_id
+         FROM folders
+    )AND 
+    count(folder_id) = 0
+GROUP BY folder_id
+);
+*
+
+/*
+SELECT folder_id
+FROM files2folders
+WHERE folder_id IN
+(
+   SELECT folder_id
+   FROM folders
+)
+GROUP BY folder_id
+HAVING count(folder_id) != 0;
+;
+*/

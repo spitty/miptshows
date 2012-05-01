@@ -26,9 +26,11 @@ public class TestCommonConfiguration
 //        System.out.println(driver);
 //        String s = PropertiesManager.getDatabaseURL();
 //        System.out.println(s);
-        List<String> list = PropertiesManager.getResourcesShare();
-        for(String str: list){
-            System.out.println(str);
-        }
+//        List<String> list = PropertiesManager.getResourcesShare();
+//        for(String str: list){
+//            System.out.println(str);
+//        }
+        double rate = PropertiesManager.getDeletingRate();
+        System.out.println(rate);
     }
 }

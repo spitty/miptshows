@@ -38,3 +38,11 @@ tbody{
 .showText{
     font-size: 14px;
 }
+.episodeText{
+   font-size: 16px; 
+}
+.episodeRef{
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 20px;
+}
