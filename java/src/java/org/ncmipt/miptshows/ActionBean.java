@@ -15,7 +15,6 @@ import org.apache.log4j.LogManager;
 import org.ncmipt.miptshows.api.entities.Episode;
 import org.ncmipt.miptshows.api.entities.Show;
 import org.ncmipt.miptshows.api.entities.TopShow;
-import org.ncmipt.miptshows.scheduler.DataScheduler;
 import org.primefaces.event.RateEvent;
 import org.primefaces.event.ToggleEvent;
 
@@ -27,7 +26,6 @@ import org.primefaces.event.ToggleEvent;
 @SessionScoped
 public class ActionBean
 {
-    
 
     private static final org.apache.log4j.Logger LOG = LogManager.getLogger(ActionBean.class);
     private String resp;
@@ -184,7 +182,6 @@ public class ActionBean
 
     /**
      * This function make a greeting string using the user's login.
-     *
      * @return greeting String
      */
     public String greeting()
@@ -194,25 +191,32 @@ public class ActionBean
 
     /**
      * This function trying to do authorization with imputed login and MD5-converted password.
-     *
      * @return redirectTo name of the further page
      */
     public String authorization()
     {
         listOfShows = null;
         handler = new ConnectionManager();
-        status = handler.getAuthorization(login, password);
-        String redirectTo;
-        if (status == 200)
+        String redirectTo = "";
+        try
         {
-            redirectTo = "actions";
-            LOG.debug("Authorization with login: " + login + "  and password: " + password + " succeeded");
-        } else
+            status = handler.getAuthorization(login, password);
+
+            if (status == 200)
+            {
+                redirectTo = "actions";
+                LOG.debug("Authorization with login: " + login + "  and password: " + password + " succeeded");
+            } else
+            {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Authorization failed!", "Try again"));
+                redirectTo = "";
+                LOG.debug("Authorization failed");
+            }
+        } catch (NullPointerException ex)
         {
-            FacesMessage fm = new FacesMessage("Authorization fails");
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Authorization failed!", "Try again"));
-            redirectTo = "";
-            LOG.debug("Authorization failed");
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Authorization failed! Connection aborted.", "Try again"));
+            LOG.debug("Authorization with login: " + login + "  and password: " + password + " failed. Connection aborted");
+            return "";
         }
         return redirectTo;
     }
@@ -292,7 +296,6 @@ public class ActionBean
      */
     public void manageShowRate(RateEvent rateEvent)
     {
-         System.out.println("123123123");
         String showId = rateEvent.getComponent().getAttributes().get("converterMessage").toString();
         int rate = ((Double) rateEvent.getRating()).intValue();
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Manage show rate", "You rated:" + rate);
@@ -307,7 +310,7 @@ public class ActionBean
      */
     public void manageEpisodeRate(RateEvent rateEvent)
     {
-       
+
         String episodeId = rateEvent.getComponent().getAttributes().get("converterMessage").toString();
         int rate = ((Double) rateEvent.getRating()).intValue();
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Manage episode rate", "You rated:" + rate);
@@ -317,14 +320,14 @@ public class ActionBean
 
     public void checkEpisode(FacesEvent event)
     {
-        System.out.println("123!!!");
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Manage episode rate", "You rated:" );
+//        System.out.println("123!!!");
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Manage episode rate", "You rated:");
 //        String t = event.getComponent().toString();
 //        int showId = Integer.valueOf(event.getComponent().getAttributes().get("dir").toString());
 //        String rate = event.getComponent().getChildren().get(1).getAttributes().get("value").toString();
 //        System.out.println(t);
 //       C System.out.println(t);
-        
+
     }
     /**
      *

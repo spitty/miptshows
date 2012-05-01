@@ -66,12 +66,14 @@ public class ConnectionManager
      * @param login    User login for authorization
      * @param password User password for authorization
      * @return         Server response status code
+     * @throws NullPointerException 
      */
-    public int getAuthorization(String login, String password)
+    public int getAuthorization(String login, String password) throws NullPointerException
     {
         httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager());
         HttpUriRequest httpRequest = null;
         HttpResponse response = null;
+        int status = 0;
         try
         {
             password = getMd5Code(password);
@@ -81,6 +83,7 @@ public class ConnectionManager
             nameValuePairs.add(new BasicNameValuePair("password", password));
 
             httpRequest = new HttpGet(HOST + PROFILE + LOGIN + URLEncodedUtils.format(nameValuePairs, "UTF-8"));
+
             response = httpClient.execute(httpRequest);
         } catch (NoSuchAlgorithmException ex)
         {
@@ -89,7 +92,7 @@ public class ConnectionManager
         {
             LOG.error("Failed make MD5", ex);
         }
-        return response.getStatusLine().getStatusCode();
+        return status = response.getStatusLine().getStatusCode();
     }
 
     /**
@@ -140,24 +143,7 @@ public class ConnectionManager
         return sb.toString();
     }
 
-//     public String mmmSeries(int episode)
-//    {
-//        HttpPost httpPost = new HttpPost(HOST + PROFILE + SHOWS +"3/"+ episode + '/');
-//        StringBuilder sb = new StringBuilder("");
-//        try
-//        {
-//            HttpResponse response = httpClient.execute(httpPost);
-//            Scanner scanner = new Scanner(response.getEntity().getContent(), "UTF-8");
-//            while (scanner.hasNextLine())
-//            {
-//                sb.append(scanner.nextLine());
-//            }
-//        } catch (IOException ex)
-//        {
-//            LOG.error("Failed to create server response", ex);
-//        }
-//        return sb.toString();
-//    }
+
     /**
      * This function sets the value of rate for chosen show identified by show id
      * 
@@ -179,7 +165,7 @@ public class ConnectionManager
     }
 
     /**
-     * This function sets the value of rate for chosen show identified by show id
+     * This function sets the value of rate for chosen show identified by episode id
      * @param episodeId id of chosen episode
      * @param rate 
      */
@@ -286,4 +272,26 @@ public class ConnectionManager
         }
         return sb.toString();
     }
+    
+    
+    
+    
+    //     public String mmmSeries(int episode)
+//    {
+//        HttpPost httpPost = new HttpPost(HOST + PROFILE + SHOWS +"3/"+ episode + '/');
+//        StringBuilder sb = new StringBuilder("");
+//        try
+//        {
+//            HttpResponse response = httpClient.execute(httpPost);
+//            Scanner scanner = new Scanner(response.getEntity().getContent(), "UTF-8");
+//            while (scanner.hasNextLine())
+//            {
+//                sb.append(scanner.nextLine());
+//            }
+//        } catch (IOException ex)
+//        {
+//            LOG.error("Failed to create server response", ex);
+//        }
+//        return sb.toString();
+//    }
 }

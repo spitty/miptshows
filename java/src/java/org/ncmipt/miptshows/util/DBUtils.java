@@ -45,24 +45,24 @@ public class DBUtils implements Closeable
 //            String url = PropertiesManager.getDatabaseURL();
 //            String username = PropertiesManager.getDatabaseUserName();
 //            String password = PropertiesManager.getDatabaseUserPassword();
-            
+//            
             String JNDIDataSourceName = PropertiesManager.getJNDIDataSourceName();
             InitialContext context = new InitialContext();
             DataSource source = (DataSource) context.lookup("jdbc/miptshows");
             conn = source.getConnection();
-            File file = new File(".");
-            System.out.println( file.getPath());
+//            File file = new File(".");
+//            System.out.println( file.getPath());
  
 //            Class.forName(driver);
 //            conn = DriverManager.getConnection(url, username, password);
 
-        }/* catch (ClassNotFoundException ex)
+        } catch (NamingException ex)
         {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }  */catch (NamingException ex)
+        } /*catch (ClassNotFoundException ex)
         {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }  catch (SQLException e)
+        } */catch (SQLException e)
         {
             if (LOG.isErrorEnabled())
             {
