@@ -1,5 +1,6 @@
 package org.ncmipt.miptshows;
 
+import java.util.ArrayList;
 import org.ncmipt.miptshows.api.ConnectionManager;
 import org.ncmipt.miptshows.api.JsonConverter;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.apache.log4j.LogManager;
 import org.ncmipt.miptshows.api.entities.Episode;
 import org.ncmipt.miptshows.api.entities.Show;
 import org.ncmipt.miptshows.api.entities.TopShow;
+import org.ncmipt.miptshows.scheduler.DataScheduler;
 import org.primefaces.event.RateEvent;
 import org.primefaces.event.ToggleEvent;
 
@@ -25,6 +27,7 @@ import org.primefaces.event.ToggleEvent;
 @SessionScoped
 public class ActionBean
 {
+    
 
     private static final org.apache.log4j.Logger LOG = LogManager.getLogger(ActionBean.class);
     private String resp;
@@ -236,7 +239,10 @@ public class ActionBean
         listOfRemoveShows = list.get(3);
         list.clear();
         listOfWatchingShows = ListOfShowsChanger.makeShowsWithEpisodes(listOfWatchingShows, episodes);
-        //listOfWatchingShows = ListOfShowsChanger.addRefToEpisodes(listOfWatchingShows);
+//        List<String> l = new ArrayList<String>();
+//        l.add("ANALITUS");
+//        listOfWatchingShows.get(0).getListOfUnwathedEpisodes().get(0).setRef(l);
+        listOfWatchingShows = ListOfShowsChanger.addRefToEpisodes(listOfWatchingShows);
 
     }
 

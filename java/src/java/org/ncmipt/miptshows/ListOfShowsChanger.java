@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.ncmipt.miptshows.api.entities.Episode;
 import org.ncmipt.miptshows.api.entities.Show;
+import org.ncmipt.miptshows.util.DBUtils;
 import org.ncmipt.miptshows.util.TableUtils;
 
 /**
@@ -97,16 +98,19 @@ public class ListOfShowsChanger
      */
     public static List<Show> addRefToEpisodes(List<Show> shows)
     {
+        DBUtils dbUtils = new DBUtils();
         for (Show show : shows)
         {
+            String ruTitle = show.getRuTitle();
+            String title = show.getTitle();
+
             List<Episode> episodes = show.getListOfUnwathedEpisodes();
             for (Episode ep : episodes)
             {
-                List<String> pathes = TableUtils.getPathes(show.getRuTitle(),
-                        show.getTitle(), ep.getSeasonNumber(), ep.getEpisodeNumber());
-                for (String path : pathes)
+                List<String> pathes = TableUtils.getPathes(title, ruTitle, ep.getSeasonNumber(), ep.getEpisodeNumber(), dbUtils);
+                if (!pathes.isEmpty())
                 {
-                    ep.setRef(path);
+                    ep.setRef(pathes);
                 }
             }
         }
