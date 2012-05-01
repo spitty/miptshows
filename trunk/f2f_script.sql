@@ -74,6 +74,8 @@ CREATE SEQUENCE folder_id_generator;
 
 CREATE SEQUENCE server_id_generator;
 
+commit;
+
 /*
 INSERT INTO temp_data (file_name, folder_name, file_size, server_name) VALUES ('file1', 'folder2', 13453453453432, 'natalie');
 
@@ -100,4 +102,3 @@ INSERT INTO temp_data (file_name, folder_name, file_size, server_name) VALUES ('
 INSERT INTO temp_data (file_name, folder_name, file_size, server_name) VALUES ('file12', 'folder222', 200, 'dgap');
 */
 
-commit;

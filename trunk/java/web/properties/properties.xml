@@ -10,6 +10,8 @@
         <url>jdbc:oracle:thin:@localhost:1522/orcl</url>
         <username>vlad</username>
         <password>vlad</password>
+        <JNDIDataSourceName>jdbc/miptshows</JNDIDataSourceName>
+        <deletingRate>5</deletingRate>
     </database>
     <scheduler>
         <expression>0/5 * * * * ?</expression> 

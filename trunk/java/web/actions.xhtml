@@ -26,7 +26,6 @@
                             <h:outputText value=""/>
                             <h:outputText value="Статус сериала: #{show.showStatus}" styleClass="showText"/>
                             <h:outputText value="Всего серий: #{show.totalEpisodes}" styleClass="showText"/>
-<!--                            <h:outputText value="Статус просмотра: #{show.watchStatus}" styleClass="showText"/>    -->
                             <p:growl id="growl" showDetail="true" sticky="true"/>
                             <p:rating   value="#{show.rating}" disabled="false" converterMessage="#{show.showId}">
                                 <p:ajax event="rate" listener="#{actionBean.manageShowRate}" update="growl" /> 
@@ -37,13 +36,9 @@
                                         rows="3"
                                         rowsPerPageTemplate="3,9,15,20,50"
                                         paginatorPosition="top">  
-
-                                <h:outputLink value="#{episode.title}" title="local reference on #{episode.title}"> #{episode.title} #{episode.seasonNumber}сезон #{episode.episodeNumber}серия
-                                </h:outputLink> 
-                                <h:outputText value="Оцените эпизод: "/>
-                                
-                                
-
+                                <h:outputText value="#{episode.title} [s#{episode.seasonNumber}e#{episode.episodeNumber}]" styleClass="episodeText"/>
+                                <h:outputLink value="#{episode.ref.get(0)}" title="local reference on  #{episode.title}" styleClass="episodeRef">#{episode.ref.get(0)}
+                                </h:outputLink>    
                             </p:dataList>  
                         </h:panelGrid>
                     </p:panel>
