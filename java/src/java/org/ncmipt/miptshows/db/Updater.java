@@ -33,14 +33,14 @@ public class Updater
      *
      * @param share
      */
-    public static void updateDB(final String share)
+    public static void updateDB(String share)
     {
         if (share == null)
         {
             throw new IllegalArgumentException("Server cannot be null");
         }
 
-        PropertyConfigurator.configure("log4j.properties.txt");
+//        PropertyConfigurator.configure("log4j.properties.txt");
 
         DBUtils dbUtils = null;
         PreparedStatement pstat = null;
@@ -48,7 +48,9 @@ public class Updater
 
         try
         {
-            final SmbFile shareSmb = new SmbFile(share);
+            LOG.debug("->TRY TO SCAN SHARE");
+            SmbFile shareSmb = new SmbFile(share);
+
             if (!shareSmb.exists())
             {
                 if (LOG.isErrorEnabled())
@@ -69,6 +71,7 @@ public class Updater
             // It must retransmit the data from a temporary table to conctant tables and clear temptable
             TableUtils.merge(dbUtils);
             TableUtils.clearTempTable(dbUtils);
+            LOG.debug("SHARE WAS SCANNED");
 
         } catch (SmbException e)
         {
@@ -85,10 +88,16 @@ public class Updater
         } finally
         {
             // TODO google: try with resources
+            dbUtils.close();
+            try
+            {
+                pstat.close();
+            } catch (SQLException ex)
+            {
+                Logger.getLogger(Updater.class.getName()).log(Level.SEVERE, null, ex);
+            }
             IOTools.close(pstat);
             IOTools.close(dbUtils);
         }
     }
-
-    
 }

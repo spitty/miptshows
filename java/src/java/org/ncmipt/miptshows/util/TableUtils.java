@@ -3,6 +3,8 @@ package org.ncmipt.miptshows.util;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import java.util.List;
@@ -106,7 +108,7 @@ public class TableUtils
     public static List<String> getPathes(String showTitle, String ruTitle, int season, int episode, DBUtils dbUtils)
     {
         List<String> pathes = new ArrayList<String>();
-//        System.out.println(showTitle);
+        System.out.println(showTitle);
         String query =
                 "SELECT DISTINCT fol.folder_name, f.file_name "
                 + "FROM folders fol, files f, files2folders f2f "
@@ -119,30 +121,12 @@ public class TableUtils
                 + "OR f.file_name LIKE "
                 + "''||regexp_replace(lower('House'),'[^a-zа-яё0-9]+','%')||'%'||" + season + "||''||lpad(" + episode + ", 2, '0')||'%' ";
 
-
-     /*   String query =
-        "SELECT folder_name "
-        + "FROM folders "
-        + "WHERE folder_id IN "
-        + "("
-        + "SELECT folder_id "
-        + "FROM files2folders "
-        + "WHERE file_id IN "
-        + "("
-        + "SELECT file_id "
-        + "FROM files "
-        + "WHERE file_name LIKE 'Tractor%' "
-        + ") "
-        + ")";
-        */ 
-//        DBUtils dbUtils = new DBUtils();
         ResultSet result = dbUtils.executeQuery(query);
         try
         {
             while (result.next())
             {
-//                System.out.println("HELLO!");
-                pathes.add(result.getString(1)+result.getString(2));
+                pathes.add(result.getString(1) + result.getString(2));
             }
         } catch (SQLException e)
         {
@@ -155,16 +139,12 @@ public class TableUtils
             try
             {
                 result.getStatement().close();
-                dbUtils.close();
-            } catch (SQLException e)
+                result.close();
+            } catch (SQLException ex)
             {
-                if (LOG.isErrorEnabled())
-                {
-                    LOG.error("Cannot merge servers and temp_data", e);
-                }
+                LOG.error("Can't close resultSet", ex);
             }
         }
-
         return pathes;
     }
 
