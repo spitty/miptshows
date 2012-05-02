@@ -60,7 +60,7 @@ public class IOTools
             {
                 return;
             }
-            final Method closeMethod = resource.getClass().getDeclaredMethod("close", new Class[]{});
+            final Method closeMethod = resource.getClass().getMethod("close", new Class[]{});
             closeMethod.invoke(resource, new Object[]{});
         }
         catch (Exception ex)

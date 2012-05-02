@@ -46,7 +46,7 @@ public class DBUtils implements Closeable
 //            String username = PropertiesManager.getDatabaseUserName();
 //            String password = PropertiesManager.getDatabaseUserPassword();
 //            
-            String JNDIDataSourceName = PropertiesManager.getJNDIDataSourceName();
+//            String JNDIDataSourceName = PropertiesManager.getJNDIDataSourceName();
             InitialContext context = new InitialContext();
             DataSource source = (DataSource) context.lookup("jdbc/miptshows");
             conn = source.getConnection();
@@ -58,24 +58,16 @@ public class DBUtils implements Closeable
 
         } catch (NamingException ex)
         {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-        } /*catch (ClassNotFoundException ex)
-        {
-            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-        } */catch (SQLException e)
+            LOG.error("Constructor of DBUtils!", ex);
+//            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException e)
         {
             if (LOG.isErrorEnabled())
             {
                 LOG.error("Smth wrong with DB", e);
             }
         }
-//        catch (ClassNotFoundException e)
-//        {
-//            if (LOG.isErrorEnabled())
-//            {
-//                LOG.error("Smth wrong with DB", e);
-//            }
-//        }
+
     }
 
     /**

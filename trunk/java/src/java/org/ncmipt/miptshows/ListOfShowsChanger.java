@@ -6,9 +6,12 @@ package org.ncmipt.miptshows;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.ncmipt.miptshows.api.entities.Episode;
 import org.ncmipt.miptshows.api.entities.Show;
 import org.ncmipt.miptshows.util.DBUtils;
+import org.ncmipt.miptshows.util.IOTools;
 import org.ncmipt.miptshows.util.TableUtils;
 
 /**
@@ -20,6 +23,7 @@ import org.ncmipt.miptshows.util.TableUtils;
 public class ListOfShowsChanger
 {
 
+    private static final Log LOG = LogFactory.getLog(ListOfShowsChanger.class);
     private static final String WATHCING = "watching";
     private static final String LATER = "later";
     private static final String CANCELLED = "cancelled";
@@ -98,7 +102,7 @@ public class ListOfShowsChanger
      */
     public static List<Show> addRefToEpisodes(List<Show> shows)
     {
-        DBUtils dbUtils = new DBUtils();
+        final DBUtils dbUtils = new DBUtils();
         for (Show show : shows)
         {
             String ruTitle = show.getRuTitle();
@@ -114,6 +118,18 @@ public class ListOfShowsChanger
                 }
             }
         }
+        try
+        {
+            dbUtils.close();
+            IOTools.close(dbUtils);
+        } catch (NullPointerException e)
+        {
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Can't close DBUtils", e);
+            }
+        }
+
         return shows;
     }
 }

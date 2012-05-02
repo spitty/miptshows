@@ -15,6 +15,7 @@ import org.apache.log4j.LogManager;
 import org.ncmipt.miptshows.api.entities.Episode;
 import org.ncmipt.miptshows.api.entities.Show;
 import org.ncmipt.miptshows.api.entities.TopShow;
+import org.ncmipt.miptshows.db.Updater;
 import org.primefaces.event.RateEvent;
 import org.primefaces.event.ToggleEvent;
 
@@ -318,6 +319,10 @@ public class ActionBean
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
+    /**
+     * 
+     * @param event 
+     */
     public void checkEpisode(FacesEvent event)
     {
 //        System.out.println("123!!!");
@@ -328,6 +333,14 @@ public class ActionBean
 //        System.out.println(t);
 //       C System.out.println(t);
 
+    }
+
+    /**
+     * 
+     */
+    public void startScanShare()
+    {
+        Updater.updateDB("smb://natalie.campus/incoming/! For/ForMiptShows/MiptShowsTest/");
     }
     /**
      *
