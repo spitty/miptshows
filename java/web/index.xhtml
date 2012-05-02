@@ -9,7 +9,7 @@
         <title>Welcome to MiptShows</title>
         <h:outputStylesheet library="css" name="miptshows.css"/>
     </h:head>
-    <h:body>    
+    <h:body onload="#{actionBean.redirectToActions()}">    
         <h:form styleClass="auth_form">
             <h:graphicImage library="images" name="tv.png" styleClass="tv_img" />
             <p:panel header="MiptShows" footer="Please, enter your login and password from &lt;strong&gt; myshows.ru&lt;/strong&qt; into fields">
