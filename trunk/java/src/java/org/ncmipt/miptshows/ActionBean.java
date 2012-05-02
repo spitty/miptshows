@@ -1,6 +1,9 @@
 package org.ncmipt.miptshows;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.ncmipt.miptshows.api.ConnectionManager;
 import org.ncmipt.miptshows.api.JsonConverter;
 import java.util.List;
@@ -16,6 +19,9 @@ import org.ncmipt.miptshows.api.entities.Episode;
 import org.ncmipt.miptshows.api.entities.Show;
 import org.ncmipt.miptshows.api.entities.TopShow;
 import org.ncmipt.miptshows.db.Updater;
+import org.ncmipt.miptshows.properties.PropertiesManager;
+import org.ncmipt.miptshows.properties.SuperPropertiesManager;
+import org.ncmipt.miptshows.scheduler.MyScheduler;
 import org.primefaces.event.RateEvent;
 import org.primefaces.event.ToggleEvent;
 
@@ -29,6 +35,7 @@ public class ActionBean
 {
 
     private static final org.apache.log4j.Logger LOG = LogManager.getLogger(ActionBean.class);
+    private boolean auth = false;
     private String resp;
     private String login = "";
     private String password = "";
@@ -205,10 +212,12 @@ public class ActionBean
 
             if (status == 200)
             {
+                this.auth = true;
                 redirectTo = "actions";
                 LOG.debug("Authorization with login: " + login + "  and password: " + password + " succeeded");
             } else
             {
+                this.auth = false;
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Authorization failed!", "Try again"));
                 redirectTo = "";
                 LOG.debug("Authorization failed");
@@ -340,7 +349,33 @@ public class ActionBean
      */
     public void startScanShare()
     {
-        Updater.updateDB("smb://natalie.campus/incoming/! For/ForMiptShows/MiptShowsTest/");
+//        Updater.updateDB("smb://natalie.campus/incoming/! For/ForMiptShows/MiptShowsTest/");
+        MyScheduler.startScheduler();
+    }
+    private String option = "No Option";
+
+    public String getOption()
+    {
+        return this.option;
+    }
+
+    public void makeOption()
+    {
+        this.option = SuperPropertiesManager.showProperty();
+    }
+
+    public void redirectToActions()
+    {
+        if (auth == true)
+        {
+            try
+            {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("faces/actions.xhtml");
+            } catch (IOException ex)
+            {
+                LOG.error("Cant redirect logged ", ex);
+            }
+        }
     }
     /**
      *
