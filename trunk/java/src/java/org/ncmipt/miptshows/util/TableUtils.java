@@ -3,15 +3,13 @@ package org.ncmipt.miptshows.util;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import java.util.List;
 
 /**
  *
- * @author Ivanov Roman, Efremov Vladislav
+ * @author Vlad, Roman
  */
 public class TableUtils
 {
@@ -108,41 +106,58 @@ public class TableUtils
     public static List<String> getPathes(String showTitle, String ruTitle, int season, int episode, DBUtils dbUtils)
     {
         List<String> pathes = new ArrayList<String>();
-        System.out.println(showTitle);
         String query =
                 "SELECT DISTINCT fol.folder_name, f.file_name "
                 + "FROM folders fol, files f, files2folders f2f "
                 + "WHERE f2f.file_id = f.file_id "
                 + "AND f2f.folder_id = fol.folder_id "
                 + "AND f.file_name LIKE "
-                + "''||regexp_replace(lower('House'),'[^a-zа-яё0-9]+','%')||'%s'||lpad(" + season + ", 2, '0')||'%e'||lpad(" + episode + ", 2, '0')||'%' "
+                + "''||regexp_replace(lower('" + showTitle + "'),'[^a-zа-яё0-9]+','%')||'%s'||lpad(" + season + ", 2, '0')||'%e'||lpad(" + episode + ", 2, '0')||'%' "
                 + "OR f.file_name LIKE "
-                + "''||regexp_replace(lower('House'),'[^a-zа-яё0-9]+','%')||'%'||" + season + "||'x'||lpad(" + episode + ", 2, '0')||'%' "
+                + "''||regexp_replace(lower('" + showTitle + "'),'[^a-zа-яё0-9]+','%')||'%'||" + season + "||'x'||lpad(" + episode + ", 2, '0')||'%' "
                 + "OR f.file_name LIKE "
-                + "''||regexp_replace(lower('House'),'[^a-zа-яё0-9]+','%')||'%'||" + season + "||''||lpad(" + episode + ", 2, '0')||'%' ";
+                + "''||regexp_replace(lower('" + showTitle + "'),'[^a-zа-яё0-9]+','%')||'%'||" + season + "||''||lpad(" + episode + ", 2, '0')||'%' ";
 
         ResultSet result = dbUtils.executeQuery(query);
-        try
-        {
-            while (result.next())
-            {
-                pathes.add(result.getString(1) + result.getString(2));
-            }
-        } catch (SQLException e)
-        {
-            if (LOG.isErrorEnabled())
-            {
-                LOG.error("Cannot execute select for searching pathes", e);
-            }
-        } finally
+        if (result == null)
         {
             try
             {
-                result.getStatement().close();
                 result.close();
-            } catch (SQLException ex)
+            } catch (Throwable th)
             {
-                LOG.error("Can't close resultSet", ex);
+                if (LOG.isFatalEnabled())
+                {
+                    LOG.fatal("result in null", th);
+                }
+            }
+        } else
+        {
+            try
+            {
+                while (result.next())
+                {
+                    pathes.add(result.getString(1) + result.getString(2));
+                }
+            } catch (SQLException e)
+            {
+                if (LOG.isErrorEnabled())
+                {
+                    LOG.error("Cannot execute select for searching pathes", e);
+                }
+            } finally
+            {
+                try
+                {
+                    result.getStatement().close();
+                    result.close();
+                } catch (SQLException ex)
+                {
+                    if (LOG.isErrorEnabled())
+                    {
+                        LOG.error("Can't close resultSet", ex);
+                    }
+                }
             }
         }
         return pathes;

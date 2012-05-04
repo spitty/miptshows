@@ -6,11 +6,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -29,11 +26,6 @@ public class ConnectionManager
 {
 
     private static org.apache.log4j.Logger LOG = LogManager.getLogger(ConnectionManager.class);
-    private static final String HOST = "http://api.myshows.ru/";
-    private static final String PROFILE = "profile/";
-    private static final String LOGIN = "login?";
-    private static final String SHOWS = "shows/";
-    private static final String EPISODES = "episodes/unwatched/";
     private HttpClient httpClient;
 
     /**
@@ -82,9 +74,10 @@ public class ConnectionManager
             nameValuePairs.add(new BasicNameValuePair("login", login));
             nameValuePairs.add(new BasicNameValuePair("password", password));
 
-            httpRequest = new HttpGet(HOST + PROFILE + LOGIN + URLEncodedUtils.format(nameValuePairs, "UTF-8"));
+            httpRequest = new HttpGet("http://api.myshows.ru/profile/login?" + URLEncodedUtils.format(nameValuePairs, "UTF-8"));
 
             response = httpClient.execute(httpRequest);
+            status = response.getStatusLine().getStatusCode();
         } catch (NoSuchAlgorithmException ex)
         {
             LOG.error("Failed make MD5", ex);
@@ -92,7 +85,8 @@ public class ConnectionManager
         {
             LOG.error("Failed make MD5", ex);
         }
-        return status = response.getStatusLine().getStatusCode();
+
+        return status;
     }
 
     /**
@@ -101,7 +95,7 @@ public class ConnectionManager
      */
     public String getListOfShows()
     {
-        HttpPost httpPost = new HttpPost(HOST + PROFILE + SHOWS);
+        HttpPost httpPost = new HttpPost("http://api.myshows.ru/profile/shows/");
         StringBuilder sb = new StringBuilder("");
         try
         {
@@ -126,7 +120,7 @@ public class ConnectionManager
      */
     public String getListOfViewedSeries(int showId)
     {
-        HttpPost httpPost = new HttpPost(HOST + PROFILE + SHOWS + showId + '/');
+        HttpPost httpPost = new HttpPost("http://api.myshows.ru/profile/shows/" + showId + '/');
         StringBuilder sb = new StringBuilder("");
         try
         {
@@ -143,7 +137,6 @@ public class ConnectionManager
         return sb.toString();
     }
 
-
     /**
      * This function sets the value of rate for chosen show identified by show id
      * 
@@ -152,8 +145,9 @@ public class ConnectionManager
      */
     public void manageShowRate(String showId, int rate)
     {
-        String host = HOST + PROFILE + SHOWS + showId + "/rate/" + rate;
-        HttpPost httpPost = new HttpPost(host);
+        StringBuilder sb = new StringBuilder("http://api.myshows.ru/profile/shows/");
+        sb.append(showId).append("/rate/").append(rate);
+        HttpPost httpPost = new HttpPost(sb.toString());
         try
         {
             HttpResponse response = httpClient.execute(httpPost);
@@ -171,13 +165,12 @@ public class ConnectionManager
      */
     public void manageEpisodeRate(String episodeId, int rate)
     {
-        //http://api.myshows.ru/profile/episodes/rate/5/291461
-        //String host = HOST + PROFILE + SHOWS + showId + "/rate/" + rate;
-        String host = "http://api.myshows.ru/profile/episodes/rate/" + rate + "/" + episodeId;
-        HttpPost httpPost = new HttpPost(host);
+        StringBuilder sb = new StringBuilder("http://api.myshows.ru/profile/episodes/rate/");
+        sb.append(rate).append('/').append(episodeId);
+        HttpPost httpPost = new HttpPost(sb.toString());
         try
         {
-            HttpResponse response = httpClient.execute(httpPost);
+            httpClient.execute(httpPost);
         } catch (IOException ex)
         {
             LOG.error("Can't manage episode rate", ex);
@@ -189,13 +182,14 @@ public class ConnectionManager
      * @param episodeId
      * @param rate 
      */
-    public void checkEpisode(int episodeId, int rate)
+    public void checkEpisode(String episodeId)
     {
-        String host = "http://api.myshows.ru/profile/episodes/rate/" + rate + "/" + episodeId;
+        //http://api.myshows.ru/profile/episodes/check/291461 
+        String host = "http://api.myshows.ru/profile/episodes/check/" + episodeId;
         HttpPost httpPost = new HttpPost(host);
         try
         {
-            HttpResponse response = httpClient.execute(httpPost);
+            httpClient.execute(httpPost);
         } catch (IOException ex)
         {
             LOG.error("Can't check episode", ex);
@@ -208,7 +202,7 @@ public class ConnectionManager
      */
     public String showTopAllShows()
     {
-        HttpPost httpPost = new HttpPost(HOST + SHOWS + "top/all/");
+        HttpPost httpPost = new HttpPost("http://api.myshows.ru/shows/top/all/");
         StringBuilder sb = new StringBuilder("");
         try
         {
@@ -232,7 +226,7 @@ public class ConnectionManager
      */
     public String getUserInfo(String login)
     {
-        HttpPost httpPost = new HttpPost(HOST + PROFILE + login);
+        HttpPost httpPost = new HttpPost("http://api.myshows.ru/profile/" + login);
         StringBuilder sb = new StringBuilder("");
         try
         {
@@ -255,8 +249,7 @@ public class ConnectionManager
      */
     public String getUnwatchedEpisodes()
     {
-        //http://api.myshows.ru/profile/episodes/unwatched/ 
-        HttpPost httpPost = new HttpPost(HOST + PROFILE + EPISODES);
+        HttpPost httpPost = new HttpPost("http://api.myshows.ru/profile/episodes/unwatched/");
         StringBuilder sb = new StringBuilder("");
         try
         {
@@ -272,10 +265,6 @@ public class ConnectionManager
         }
         return sb.toString();
     }
-    
-    
-    
-    
     //     public String mmmSeries(int episode)
 //    {
 //        HttpPost httpPost = new HttpPost(HOST + PROFILE + SHOWS +"3/"+ episode + '/');

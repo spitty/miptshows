@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package org.ncmipt.miptshows;
 
 import java.util.ArrayList;
@@ -96,7 +93,7 @@ public class ListOfShowsChanger
     }
 
     /**
-     *
+     * This function adds references to each Episode for each Show
      * @param shows
      * @return
      */
@@ -114,7 +111,7 @@ public class ListOfShowsChanger
                 List<String> pathes = TableUtils.getPathes(title, ruTitle, ep.getSeasonNumber(), ep.getEpisodeNumber(), dbUtils);
                 if (!pathes.isEmpty())
                 {
-                    ep.setRef(pathes);
+                    ep.setRef(changeSlash(pathes));
                 }
             }
         }
@@ -131,5 +128,24 @@ public class ListOfShowsChanger
         }
 
         return shows;
+    }
+
+    /**
+     * This function change slash in reference strings for making it suitable for browser
+     * @param pathes
+     * @return 
+     */
+    public static List<String> changeSlash(List<String> pathes)
+    {
+        StringBuilder sb;
+        String goodPath;
+        List<String> goodPathes = new ArrayList<String>();
+        for (String s : pathes)
+        {
+            sb = new StringBuilder();
+            goodPath = sb.append(s).replace(0, 3, "file").toString().replace('/', '\\');
+            goodPathes.add(goodPath);
+        }
+        return goodPathes;
     }
 }

@@ -11,7 +11,7 @@ import org.apache.commons.logging.LogFactory;
 import org.ncmipt.miptshows.util.IOTools;
 
 /**
- *
+ * Extended functionality in future
  * @author Vlad
  */
 public class CookiesChecker implements Closeable
@@ -29,10 +29,16 @@ public class CookiesChecker implements Closeable
 
         } catch (ClassNotFoundException ex)
         {
-            LOG.error("Can't make Class.forName", ex);
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Can't make Class.forName", ex);
+            }
         } catch (SQLException ex)
         {
-            LOG.error("Can't create connection", ex);
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Can't create connection", ex);
+            }
         }
     }
 
@@ -53,9 +59,10 @@ public class CookiesChecker implements Closeable
                     + " where login = '" + login
                     + "' AND password = '" + password + "'";
             ResultSet result = stat.executeQuery(query);
-            if(result.next())
+            if (result.next())
             {
-                if(result.getInt(1)==1){
+                if (result.getInt(1) == 1)
+                {
                     isExist = true;
                 }
             }
@@ -63,7 +70,10 @@ public class CookiesChecker implements Closeable
 
         } catch (SQLException ex)
         {
-            LOG.error("Can't create statement", ex);
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Can't create statement", ex);
+            }
         } finally
         {
 //            close(); Рома, настрой нормально свой логгер!
@@ -87,7 +97,10 @@ public class CookiesChecker implements Closeable
 //            stat.execute("commit");
         } catch (SQLException ex)
         {
-            LOG.error("Can't create statement", ex);
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Can't create statement", ex);
+            }
         } finally
         {
 //            close();

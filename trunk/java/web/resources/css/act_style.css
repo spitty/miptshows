@@ -3,7 +3,7 @@
     Created on : Mar 29, 2012, 4:11:11 PM
     Author     : Vlad
     Description:
-        Purpose of the stylesheet follows.
+        Style sheet for actions.xhtml page
 */
 
 root { 
@@ -17,7 +17,7 @@ body{
 .act_show_view1,
 .act_show_view2{
     margin: 0 auto 0 auto;
-    width: 100%;
+    width: auto;
 }
 .hello_text{
     font-size: 18px;
@@ -45,4 +45,44 @@ tbody{
     font-size: 16px;
     font-weight: bold;
     margin-left: 20px;
+}
+.checkImg{
+    width: 21px;
+    height: 21px;
+    margin: 3px 10px 0 0px;
+    cursor: pointer;
+}
+.tv_img{
+    margin: 0 auto 0px 50px;
+}
+#header{
+    font-size: 10px;
+    height: 15px;
+}
+.ui-dt-c{
+    font-size: 14px;
+}
+.unwatchedEpText{
+    font-size: 14px;
+    
+}
+.closeImg{
+    cursor: pointer;
+    float: right;
+    
+}
+.ui-notificationbar,
+ui-widget,
+ui-widget-content,
+top ,
+#j_idt7{
+    height: 100px!important;
+    width: 100%;
+}
+.ui-notificationbar{
+    padding: 10px 0 0 10px !important;
+    height: 100px!important;
+}
+.top{
+    cursor: pointer;
 }

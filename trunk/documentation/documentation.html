@@ -8,7 +8,7 @@ and open the template in the editor.
         <title>MIPTShows documentation</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
-    <body style="width: 1200px; margin: 0 auto 0 auto; padding: 0 0 0 50px; color:#131313;">
+    <body style="width: 1200px; margin: 0 auto 0 auto; padding: 0 0 0 50px; color:#131313; ">
         <div id="header" style="text-align: center;">
             <h1 style="margin-bottom:10px;">MIPTShows Application</h1>
             <strong>Watch your favourite shows!</strong>
@@ -17,7 +17,7 @@ and open the template in the editor.
             <ul style="margin: 20px 0 20px 0px;">
                 <li><a href="#programOverview">Program overview</a></li>
                 <li><a href="#databaseModel">Database model</a></li>
-                <li><a href="#installationNotes">Installation notes</a></li>
+                <li><a href="#installationNotes">Installation step by step</a></li>
                 <li><a href="#functionality">Functionality of the program</a></li>
             </ul>
         </div>
@@ -32,29 +32,73 @@ and open the template in the editor.
                 User-friendly interface is ergonomic and easy to use. Pleasant viewing!</p>
         </div>
         <hr/>
-     
+
         <div id="databaseModel" style="text-align: left;">
             <h2 style="margin: 0;">Database model</h2>
             <img src="MIPTShows.png"/>
         </div>
         <hr/>
-      
+
         <div id="installationNotes">
-            <h2 style="margin: 0;">Installation notes</h2>
-            <ol>
-                <li>You must have installed database and webserver. Database might be different, for example Oracle or MySQL. </li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
+            <h2 style="margin: 0;">Installation step by step</h2>
+            <h4>You should have installed database and webserver. Database and server might be different, but this manual about OracleDb and Glassfish server.</h4>
+            Initial status:<br/>
+            <strong>Oracle DB</strong>: <strong>installed</strong> (if no, see <a href="http://ipccenter.ru/manage/course/lecture.do?pk=2214">link</a>),<br/>
+            <strong>Glassfish</strong> application server: <strong>installed</strong> ( <a href="http://glassfish.java.net/">download</a> )
+            <ol>  
+                
+              
+                <li>
+                    If you don’t have user in DB, create him (you can use http://localhost:8080/apex if your oracle
+                    db instance have apex running on port 8080). We will assume that we have user ‘webdata’ with
+                    corresponding password ‘webdata’.
+                </li>
+                <li>
+                    Get ojdbc14.jar. We don’t care how but you have to get this damn library. We couldn’t interact with
+                    oracle DB without it.
+                    Put it into $glassfish_home_dir/glassfish/lib directory.
+                </li>
+                <li>
+                    Start Glassfish server and open its admin console (usually it can be found on <a href="http://localhost:4848/">http://localhost:4848/</a>)<br/>
+                    The first thing you should to do is set the configuration.<br/>
+                    Go to Configurations -> server-config -> JVM Settings </br>
+                    Choose "JVM Options" and click [Add JVM Option]</br>
+                    type: "-Dmiptshows.configuration=file:///SOME_PATH/properties.xml" and click [Save]
+                    where SOME_PATH - the path of properties.xml location from install package of MIPTShows.
+                </li>
+                <li>
+                    Go to Resources -> JDBC -> JDBC Connection Pools.<br/>
+                    Click [New]<br/>
+                    Enter “MiptShowsDataPool” as Name, javax.sql.DataSource as Resource Type and oracle as
+                    Database Driver Vendor
+                    Click [Next]<br/>
+                    …<br/>
+                    set<br/>
+                    url=jdbc:oracle:thin:@localhost:1521:xe<br/>
+                    user=webdata<br/>
+                    password=webdata<br/>
+                    [note: XE is the service ID [SID] only in case of Oracle Express edition. It also can be oradb]
+                    remove extra params.<br/>
+                    Note: if your oracle settings is not default options would be different<br/>
+                    Click [Ping] and celebrate successful connection test.
+                </li>
+                <li>
+                    Now you might go to Resources -> JDBC -> JDBC Resources and create new resource with
+                    name jdbc/miptshows and use MiptShowsDataPool as Data source.<br/>
+                </li>
+                <li>
+                    Configure file properties.xml.
+                    In this case  key "JNDIDataSourceName" in the file properties.xml should have value "jdbc/miptshows".
+                </li>
             </ol>
+            <h4 style="margin: 0;">For setting database:</h4>
+            Open file <strong>f2f_script.sql</strong> and execute in as script;
         </div>
         <hr/>
-        
+
         <div id="functionality">
             <h2 style="margin: 0;">Functionality of the program</h2>
-            
+
         </div>
         <hr/>
 

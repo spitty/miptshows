@@ -12,7 +12,7 @@
     <h:body onload="#{actionBean.redirectToActions()}">    
         <h:form styleClass="auth_form">
             <h:graphicImage library="images" name="tv.png" styleClass="tv_img" />
-            <p:panel header="MiptShows" footer="Please, enter your login and password from &lt;strong&gt; myshows.ru&lt;/strong&qt; into fields">
+            <p:panel header="#{actionBean.applicationName}" footer="Please, enter your login and password from &lt;strong&gt; myshows.ru&lt;/strong&qt; into fields">
                 <p:panelGrid columns="2" >
                     <h:outputText value="Login:*" styleClass="labels" />
                     <p:inputText value="#{actionBean.login}" required="true" id="login"/>

@@ -10,59 +10,75 @@
         <h:outputStylesheet library="css" name="act_style.css"/>
     </h:head>
     <h:body onload="#{actionBean.makeListOfShows()}">
+        <script>
+        onload = function () {
+            document.getElementById("notBar").ondblclick = function () { bar.hide() }
+        }
+        </script>
+        <p:notificationBar  position="top" effect="slide" widgetVar="bar" styleClass="top" id="notBar" >  
+            <h:outputText id="barText"  style="color:#FFCC00;font-size:30px;" />  
+        </p:notificationBar>  
         <h:outputText value="#{actionBean.greeting()}" styleClass="hello_text"></h:outputText>
         <h:form styleClass="act_show_view1" >
-            <p:growl id="messages" showDetail="true"/>
-            <p:dataGrid id="list" value="#{actionBean.listOfWatchingShows}" columns="10" var="show"
-                        rows="12" paginator="true"
+            <p:growl id="messages" showDetail="true" sticky="true"/>
+<!--            <p:messages id="messages" showDetail="true" autoUpdate="true" >         
+                <p:effect type="pulsate" event="click" delay="800" speed="1000">  
+                    <f:param name="mode"  />  
+                </p:effect>  
+            </p:messages>-->
+            <h:graphicImage library="images" name="tv.png" styleClass="tv_img" alt="Image"  />
+            <p:dataGrid id="list" value="#{actionBean.listOfWatchingShows}" columns="4" var="show"
+                        rows="4" paginator="true"
                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                        rowsPerPageTemplate="9,12,15"
+                        rowsPerPageTemplate="4, 8 ,12, 16, 20, 60"
                         paginatorPosition="top"
                         styleClass="act_show_view2">
-                <p:column>
+                <p:column >
                     <p:panel header="#{show.title} / #{show.ruTitle}" styleClass="showPanel">
                         <h:panelGrid columns="1" styleClass="viewShowsPanel">
                             <p:graphicImage value="#{show.image}" styleClass="image"/>
                             <h:outputText value=""/>
-                            <h:outputText value="Статус сериала: #{show.showStatus}" styleClass="showText"/>
+                            <h:outputText value="Статус: #{show.showStatus}" styleClass="showText"/>
                             <h:outputText value="Всего серий: #{show.totalEpisodes}" styleClass="showText"/>
-                            <p:growl id="growl" showDetail="true" sticky="true"/>
                             <p:rating   value="#{show.rating}" disabled="false" converterMessage="#{show.showId}">
-                                <p:ajax event="rate" listener="#{actionBean.manageShowRate}" update="growl" /> 
-                            </p:rating> 
-                            <h:outputText value="Непросмотренные эпизоды:"/>
-                            <p:dataList value="#{show.listOfUnwathedEpisodes}" var="episode" itemType="disc" paginator="true" 
-                                        paginatorTemplate=" {CurrentPageReport} {PreviousPageLink} {PageLinks} {NextPageLink} {RowsPerPageDropdown}"
-                                        rows="3"
-                                        rowsPerPageTemplate="3,9,15,20,50"
-                                        paginatorPosition="top">  
-                                <h:outputText value="#{episode.title} [s#{episode.seasonNumber}e#{episode.episodeNumber}]" styleClass="episodeText"/>
-                                <h:outputLink value="#{episode.ref.get(0)}" title="local reference on  #{episode.title}" styleClass="episodeRef">#{episode.ref.get(0)}
-                                </h:outputLink>    
-                            </p:dataList>  
+                                <p:ajax event="rate" listener="#{actionBean.manageShowRate}"  /> 
+                            </p:rating>
+                            <p:dataTable value="#{show.listOfUnwathedEpisodes}" var="episode"  paginator="true" 
+                                         paginatorTemplate=" {CurrentPageReport} {PreviousPageLink} {NextPageLink} {RowsPerPageDropdown}"
+                                         rows="3"
+                                         rowsPerPageTemplate="3,9,15,20,50"
+                                         paginatorPosition="top"
+                                         styleClass="refTable">  
+                                <p:column styleClass="colomn" sortBy="#{episode.seasonNumber} #{episode.episodeNumber}" sortFunction="#{actionBean.mySort}" resizable="true" > 
+                                    <f:facet name="header" >  
+                                        <h:outputText value="cортировать" />  
+                                    </f:facet> 
+                                    <h:graphicImage value="#{episode.episodeId}" dir="#{episode.title}" library="images" name="check.png" styleClass="checkImg" onclick="this.src='#{request.contextPath}/resources/images/chek.gif'">
+                                        <f:ajax  event="click" listener="#{actionBean.checkEpisode}"/>
+                                    </h:graphicImage>
+                                    <a  href="#{episode.ref.get(0)}" onclick="bar.show(); $('#barText').html($(this).attr('href'));  ">
+                                        <h:outputText value="#{episode.title} [s#{episode.seasonNumber}e#{episode.episodeNumber}]" styleClass="episodeText"/>
+                                    </a>
+                                </p:column> 
+                            </p:dataTable>  
                         </h:panelGrid>
                     </p:panel>
                 </p:column>
             </p:dataGrid>
         </h:form>
-
-
-        <!--
-                <h:form>
+        <!--EXTENDED FUNCTIONAL-->
+        <!--        <h:form>
                     <h:commandButton action="# {actionBean.userInfo()}" value="userinfo"/>
                     <h:outputText value="# {actionBean.userInfo}"/>
-        
                     <h:commandButton action="# {actionBean.makeListOfTopAllShows}" value="topShows" >
                         <f:ajax render="TopShowList"/>
                     </h:commandButton>
-        
                     <p:dataList value="# {actionBean.listOfTopAllShows}" id="TopShowList" var="show" first="0" styleClass="dataList">
                         # {show.place} 
                         <h:commandLink ># {show.title}</h:commandLink>
                     </p:dataList>
-                                <h:outputText value="# {actionBean.viewedSeries}"/>
-                </h:form>
-        -->    
+                    <h:outputText value="# {actionBean.viewedSeries}"/>
+                </h:form>-->
     </h:body>
 </html>
 

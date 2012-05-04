@@ -1,6 +1,5 @@
 package org.ncmipt.miptshows.api;
 
-import java.util.Collection;
 import org.ncmipt.miptshows.api.entities.Show;
 import org.ncmipt.miptshows.api.entities.TopShow;
 import com.google.gson.Gson;
@@ -20,7 +19,8 @@ public class JsonConverter
 {
 
     /**
-     *
+     * This function parse JSON as input string <b>text</b> and make list of Shows from it
+     * 
      * @param text
      * @return
      */
@@ -42,7 +42,7 @@ public class JsonConverter
     }
 
     /**
-     *
+     * This function parse JSON as input string <b>text</b> and make list of Top Shows from it
      * @param text
      * @return
      */
@@ -56,24 +56,24 @@ public class JsonConverter
         return topList;
     }
 
+    /**
+     * This function parse JSON as input string <b>text</b> and make list of Episodes from it
+     * @param text
+     * @return 
+     */
     public static List<Episode> mapToEpisodes(String text)
     {
-
         Gson gson = new Gson();
         Type typeOfT = new TypeToken<HashMap<String, Episode>>()
         {
         }.getType();
         Map<String, Episode> map = gson.fromJson(text, typeOfT);
-//         List<Episode> values = (List<Episode>) map.values();
         List<Episode> episodes = new ArrayList<Episode>();
-
-        
         for (String st : map.keySet())
         {
             episodes.add(map.get(st));
         }
         return episodes;
-        //return values;
     }
     //TODO: create json-handler of viewed series
     //TODO: create json-handler of user info
