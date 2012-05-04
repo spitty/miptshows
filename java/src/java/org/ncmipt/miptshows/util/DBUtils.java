@@ -1,16 +1,11 @@
 package org.ncmipt.miptshows.util;
 
 import java.io.Closeable;
-import java.io.File;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -41,26 +36,18 @@ public class DBUtils implements Closeable
 
         try
         {
-//            String driver = PropertiesManager.getDatabaseDriver();
-//            String url = PropertiesManager.getDatabaseURL();
-//            String username = PropertiesManager.getDatabaseUserName();
-//            String password = PropertiesManager.getDatabaseUserPassword();
-//            
-//            String JNDIDataSourceName = PropertiesManager.getJNDIDataSourceName();
+            String JNDIDataSourceName = PropertiesManager.getJNDIDataSourceName();
             InitialContext context = new InitialContext();
-            DataSource source = (DataSource) context.lookup("jdbc/miptshows");
+            DataSource source = (DataSource) context.lookup(JNDIDataSourceName);//"jdbc/miptshows"
             conn = source.getConnection();
-//            File file = new File(".");
-//            System.out.println( file.getPath());
- 
-//            Class.forName(driver);
-//            conn = DriverManager.getConnection(url, username, password);
 
         } catch (NamingException ex)
         {
-            LOG.error("Constructor of DBUtils!", ex);
-//            Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }catch (SQLException e)
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Constructor of DBUtils!", ex);
+            }
+        } catch (SQLException e)
         {
             if (LOG.isErrorEnabled())
             {

@@ -1,9 +1,6 @@
 package org.ncmipt.miptshows;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.ncmipt.miptshows.api.ConnectionManager;
 import org.ncmipt.miptshows.api.JsonConverter;
 import java.util.List;
@@ -11,19 +8,13 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.FacesEvent;
-import javax.faces.event.ValueChangeEvent;
 import org.apache.log4j.LogManager;
 import org.ncmipt.miptshows.api.entities.Episode;
 import org.ncmipt.miptshows.api.entities.Show;
 import org.ncmipt.miptshows.api.entities.TopShow;
-import org.ncmipt.miptshows.db.Updater;
 import org.ncmipt.miptshows.properties.PropertiesManager;
-import org.ncmipt.miptshows.properties.SuperPropertiesManager;
-import org.ncmipt.miptshows.scheduler.MyScheduler;
 import org.primefaces.event.RateEvent;
-import org.primefaces.event.ToggleEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 
 /**
  *
@@ -33,9 +24,10 @@ import org.primefaces.event.ToggleEvent;
 @SessionScoped
 public class ActionBean
 {
-
+    
     private static final org.apache.log4j.Logger LOG = LogManager.getLogger(ActionBean.class);
     private boolean auth = false;
+    private String applicationName = PropertiesManager.getApplicationName();
     private String resp;
     private String login = "";
     private String password = "";
@@ -50,134 +42,138 @@ public class ActionBean
     private List<Show> listOfRemoveShows;
     private ConnectionManager handler;
     private List<Episode> ep;
-
+    
     public List<Episode> getEp()
     {
         return ep;
     }
-
+    
     public void setEp(List<Episode> ep)
     {
         this.ep = ep;
     }
-    //private static final CookiesChecker checker = new CookiesChecker();
 
     /********************** Block of setters and getters ***********************/
+    public String getApplicationName()
+    {
+        return applicationName;
+    }
+    
     public List<Show> getListOfCancelledShows()
     {
         return listOfCancelledShows;
     }
-
+    
     public void setListOfCancelledShows(List<Show> listOfCancelledShows)
     {
         this.listOfCancelledShows = listOfCancelledShows;
     }
-
+    
     public List<Show> getListOfLaterShows()
     {
         return listOfLaterShows;
     }
-
+    
     public void setListOfLaterShows(List<Show> listOfLaterShows)
     {
         this.listOfLaterShows = listOfLaterShows;
     }
-
+    
     public List<Show> getListOfRemoveShows()
     {
         return listOfRemoveShows;
     }
-
+    
     public void setListOfRemoveShows(List<Show> listOfRemoveShows)
     {
         this.listOfRemoveShows = listOfRemoveShows;
     }
-
+    
     public List<Show> getListOfWatchingShows()
     {
         return listOfWatchingShows;
     }
-
+    
     public void setListOfWatchingShows(List<Show> listOfWatchingShows)
     {
         this.listOfWatchingShows = listOfWatchingShows;
     }
-
+    
     public List<TopShow> getListOfTopAllShows()
     {
         return listOfTopAllShows;
     }
-
+    
     public void setListOfTopAllShows(List<TopShow> listOfTopAllShows)
     {
         this.listOfTopAllShows = listOfTopAllShows;
     }
-
+    
     public String getUserInfo()
     {
         return userInfo;
     }
-
+    
     public void setUserInfo(String userInfo)
     {
         this.userInfo = userInfo;
     }
-
+    
     public String getLogin()
     {
         return login;
     }
-
+    
     public void setLogin(String login)
     {
         this.login = login;
     }
-
+    
     public String getPassword()
     {
         return password;
     }
-
+    
     public void setPassword(String password)
     {
         this.password = password;
     }
-
+    
     public String getResp()
     {
         return resp;
     }
-
+    
     public void setResp(String resp)
     {
         this.resp = resp;
     }
-
+    
     public int getStatus()
     {
         return status;
     }
-
+    
     public void setStatus(int status)
     {
         this.status = status;
     }
-
+    
     public List<Show> getListOfShows()
     {
         return listOfShows;
     }
-
+    
     public void setListOfShows(List<Show> listOfShows)
     {
         this.listOfShows = listOfShows;
     }
-
+    
     public String getViewedSeries()
     {
         return viewedSeries;
     }
-
+    
     public void setViewedSeries(String viewedSeries)
     {
         this.viewedSeries = viewedSeries;
@@ -194,7 +190,9 @@ public class ActionBean
      */
     public String greeting()
     {
-        return "Hi, " + this.login + "!";
+        StringBuilder sb = new StringBuilder("Hi, ");
+        sb.append(this.login).append("!");
+        return sb.toString();
     }
 
     /**
@@ -209,7 +207,7 @@ public class ActionBean
         try
         {
             status = handler.getAuthorization(login, password);
-
+            
             if (status == 200)
             {
                 this.auth = true;
@@ -237,27 +235,25 @@ public class ActionBean
      */
     public void makeListOfShows()
     {
-
+        
         String response = handler.getListOfShows();
         resp = response;
         listOfShows = JsonConverter.mapToShows(response);
-
+        
         response = handler.getUnwatchedEpisodes();
         List<Episode> episodes = JsonConverter.mapToEpisodes(response);
-
+        
         List<List<Show>> list = ListOfShowsChanger.makeListOfShowTypes(listOfShows);
-
+        
         listOfWatchingShows = list.get(0);
-        listOfLaterShows = list.get(1);
-        listOfCancelledShows = list.get(2);
-        listOfRemoveShows = list.get(3);
-        list.clear();
+        /*Extended functional*/
+//        listOfLaterShows = list.get(1);
+//        listOfCancelledShows = list.get(2);
+//        listOfRemoveShows = list.get(3);
+//        list.clear();
         listOfWatchingShows = ListOfShowsChanger.makeShowsWithEpisodes(listOfWatchingShows, episodes);
-//        List<String> l = new ArrayList<String>();
-//        l.add("ANALITUS");
-//        listOfWatchingShows.get(0).getListOfUnwathedEpisodes().get(0).setRef(l);
         listOfWatchingShows = ListOfShowsChanger.addRefToEpisodes(listOfWatchingShows);
-
+        
     }
 
     /**
@@ -283,7 +279,6 @@ public class ActionBean
 
     /**
      * This function create a List of TopShows where positions are ordered by rating
-     *
      */
     public void makeListOfTopAllShows()
     {
@@ -292,7 +287,6 @@ public class ActionBean
     }
 
     /**
-     *
      * @param ShowId
      */
     public void makeListOfViewedSeries(int ShowId)
@@ -306,12 +300,17 @@ public class ActionBean
      */
     public void manageShowRate(RateEvent rateEvent)
     {
-        String showId = rateEvent.getComponent().getAttributes().get("converterMessage").toString();
-        int rate = ((Double) rateEvent.getRating()).intValue();
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Manage show rate", "You rated:" + rate);
-        handler.manageShowRate(showId, rate);
-        FacesContext.getCurrentInstance().addMessage(null, message);
-
+        try
+        {
+            String showId = rateEvent.getComponent().getAttributes().get("converterMessage").toString();
+            int rate = ((Double) rateEvent.getRating()).intValue();
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Manage show rate", "You rated:" + rate);
+            handler.manageShowRate(showId, rate);
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        } catch (Exception ex)
+        {
+            LOG.error("Can't manage rate", ex);
+        }
     }
 
     /**
@@ -320,50 +319,39 @@ public class ActionBean
      */
     public void manageEpisodeRate(RateEvent rateEvent)
     {
-
-        String episodeId = rateEvent.getComponent().getAttributes().get("converterMessage").toString();
-        int rate = ((Double) rateEvent.getRating()).intValue();
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Manage episode rate", "You rated:" + rate);
-        handler.manageShowRate(episodeId, rate);
-        FacesContext.getCurrentInstance().addMessage(null, message);
+        try
+        {
+            String episodeId = rateEvent.getComponent().getAttributes().get("converterMessage").toString();
+            int rate = ((Double) rateEvent.getRating()).intValue();
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Manage episode rate", "You rated:" + rate);
+            handler.manageShowRate(episodeId, rate);
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        } catch (Exception ex)
+        {
+            LOG.error("Can't manage episode rate", ex);
+            
+        }
     }
 
     /**
-     * 
+     * checkEpisode function marks episode as watched
      * @param event 
      */
-    public void checkEpisode(FacesEvent event)
+    public void checkEpisode(AjaxBehaviorEvent event)
     {
-//        System.out.println("123!!!");
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Manage episode rate", "You rated:");
-//        String t = event.getComponent().toString();
-//        int showId = Integer.valueOf(event.getComponent().getAttributes().get("dir").toString());
-//        String rate = event.getComponent().getChildren().get(1).getAttributes().get("value").toString();
-//        System.out.println(t);
-//       C System.out.println(t);
-
+        try
+        {
+            String id = event.getComponent().getAttributes().get("value").toString();
+            String title = event.getComponent().getAttributes().get("dir").toString();
+            handler.checkEpisode(id);
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "You watched " + title, "Thank you");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        } catch (Exception ex)
+        {
+            LOG.error("Can't check episode", ex);
+        }
     }
-
-    /**
-     * 
-     */
-    public void startScanShare()
-    {
-//        Updater.updateDB("smb://natalie.campus/incoming/! For/ForMiptShows/MiptShowsTest/");
-        MyScheduler.startScheduler();
-    }
-    private String option = "No Option";
-
-    public String getOption()
-    {
-        return this.option;
-    }
-
-    public void makeOption()
-    {
-        this.option = SuperPropertiesManager.showProperty();
-    }
-
+    
     public void redirectToActions()
     {
         if (auth == true)
@@ -376,6 +364,45 @@ public class ActionBean
                 LOG.error("Cant redirect logged ", ex);
             }
         }
+    }
+
+    /**
+     * This function for sorting List of Episodes
+     * @param firstObj
+     * @param secondObj
+     * @return 
+     */
+    public int mySort(Object firstObj, Object secondObj)
+    {
+        
+        String[] first = firstObj.toString().split(" ");
+        String[] second = secondObj.toString().split(" ");
+        
+        int firstSeason = Integer.valueOf(first[0]);
+        int firstEpisode = Integer.valueOf(first[1]);
+        
+        int secondSeason = Integer.valueOf(second[0]);
+        int secondEpisode = Integer.valueOf(second[1]);
+        
+        if (firstSeason > secondSeason)
+        {
+            return 1;
+        }
+        if (firstSeason < secondSeason)
+        {
+            return -1;
+        }
+        if (firstSeason == secondSeason)
+        {
+            if (firstEpisode > secondEpisode)
+            {
+                return 1;
+            } else
+            {
+                return -1;
+            }
+        }
+        return 0;
     }
     /**
      *

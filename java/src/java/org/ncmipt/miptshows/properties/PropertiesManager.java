@@ -14,80 +14,8 @@ import org.apache.commons.logging.LogFactory;
 public class PropertiesManager
 {
 
-    private static final String PATH = "web/properties/properties.xml";
+    private static final String PATH = System.getProperty("miptshows.configuration");
     private static final Log LOG = LogFactory.getLog(PropertiesManager.class);
-
-    /**
-     * 
-     * @return 
-     */
-    public static String getDatabaseDriver()
-    {
-        String databaseDriver = "";
-        try
-        {
-            XMLConfiguration conf = new XMLConfiguration(PATH);
-            databaseDriver = conf.getString("database.driver");
-        } catch (ConfigurationException ex)
-        {
-            LOG.error("Can't read properties", ex);
-        }
-        return databaseDriver;
-    }
-
-    /**
-     * 
-     * @return 
-     */
-    public static String getDatabaseUserName()
-    {
-        String databaseUserName = "";
-        try
-        {
-            XMLConfiguration conf = new XMLConfiguration(PATH);
-            databaseUserName = conf.getString("database.username");
-        } catch (ConfigurationException ex)
-        {
-            LOG.error("Can't read properties", ex);
-        }
-        return databaseUserName;
-    }
-
-    /**
-     * 
-     * @return 
-     */
-    public static String getDatabaseUserPassword()
-    {
-        String databaseUserPassword = "";
-        try
-        {
-            XMLConfiguration conf = new XMLConfiguration(PATH);
-            databaseUserPassword = conf.getString("database.password");
-        } catch (ConfigurationException ex)
-        {
-            LOG.error("Can't read properties", ex);
-        }
-        return databaseUserPassword;
-    }
-
-    /**
-     * 
-     * @return 
-     */
-    public static String getDatabaseURL()
-    {
-        String databaseURL = "";
-        try
-        {
-            XMLConfiguration conf = new XMLConfiguration(PATH);
-            databaseURL = conf.getString("database.url");
-        } catch (ConfigurationException ex)
-        {
-            LOG.error("Can't read properties", ex);
-        }
-        return databaseURL;
-    }
 
     /**
      * 
@@ -132,15 +60,25 @@ public class PropertiesManager
     public static List<String> getResourcesShare()
     {
         List shares = new ArrayList<String>();
+        List<String> goodShares = new ArrayList<String>();
         try
         {
             XMLConfiguration conf = new XMLConfiguration(PATH);
             shares = conf.getList("scanResources.share", shares);
+
+            for (Object share : shares)
+            {
+                goodShares.add("smb:".concat(share.toString()));
+            }
         } catch (ConfigurationException ex)
         {
             LOG.error("Can't read properties", ex);
         }
-        return shares;
+        if (goodShares.isEmpty())
+        {
+            LOG.fatal("CONFIGURE SHARES IN FILE properties.xml PROPERLY");
+        }
+        return goodShares;
     }
 
     /**
@@ -178,9 +116,135 @@ public class PropertiesManager
         }
         return JNDIDataSourceName;
     }
-    
-    
-    
-    
-    
+
+    /****future*****/
+    /**
+     * 
+     * @return 
+     */
+    public static String getSchedulerMinute()
+    {
+        String schedulerMinute = "";
+        try
+        {
+            XMLConfiguration conf = new XMLConfiguration(PATH);
+            schedulerMinute = conf.getString("scheduler.minute");
+        } catch (ConfigurationException ex)
+        {
+            LOG.error("Can't read properties", ex);
+        }
+        return schedulerMinute;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public static String getSchedulerHour()
+    {
+        String schedulerHour = "";
+        try
+        {
+            XMLConfiguration conf = new XMLConfiguration(PATH);
+            schedulerHour = conf.getString("scheduler.hour");
+        } catch (ConfigurationException ex)
+        {
+            LOG.error("Can't read properties", ex);
+        }
+        return schedulerHour;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public static String getSchedulerInfo()
+    {
+        String schedulerInfo = "";
+        try
+        {
+            XMLConfiguration conf = new XMLConfiguration(PATH);
+            schedulerInfo = conf.getString("scheduler.info");
+        } catch (ConfigurationException ex)
+        {
+            LOG.error("Can't read properties", ex);
+        }
+        return schedulerInfo;
+    }
+
+    /***********/
+    /**
+     * @return 
+     */
+    @Deprecated
+    public static String getDatabaseDriver()
+    {
+        String databaseDriver = "";
+        try
+        {
+            XMLConfiguration conf = new XMLConfiguration(PATH);
+            databaseDriver = conf.getString("database.driver");
+        } catch (ConfigurationException ex)
+        {
+            LOG.error("Can't read properties", ex);
+        }
+        return databaseDriver;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    @Deprecated
+    public static String getDatabaseUserName()
+    {
+        String databaseUserName = "";
+        try
+        {
+            XMLConfiguration conf = new XMLConfiguration(PATH);
+            databaseUserName = conf.getString("database.username");
+        } catch (ConfigurationException ex)
+        {
+            LOG.error("Can't read properties", ex);
+        }
+        return databaseUserName;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    @Deprecated
+    public static String getDatabaseUserPassword()
+    {
+        String databaseUserPassword = "";
+        try
+        {
+            XMLConfiguration conf = new XMLConfiguration(PATH);
+            databaseUserPassword = conf.getString("database.password");
+        } catch (ConfigurationException ex)
+        {
+            LOG.error("Can't read properties", ex);
+        }
+        return databaseUserPassword;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    @Deprecated
+    public static String getDatabaseURL()
+    {
+        String databaseURL = "";
+        try
+        {
+            XMLConfiguration conf = new XMLConfiguration(PATH);
+            databaseURL = conf.getString("database.url");
+        } catch (ConfigurationException ex)
+        {
+            LOG.error("Can't read properties", ex);
+        }
+        return databaseURL;
+    }
 }

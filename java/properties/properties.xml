@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+    <general>
+        <applicationName>MIPTShows</applicationName>
+        <version>1.0</version>
+        <license>GNU GPL v3 (or later)</license>
+    </general>
+    <database>
+        <JNDIDataSourceName>jdbc/miptshows</JNDIDataSourceName>
+        <deletingRate>5</deletingRate>
+    </database>
+    <scheduler>
+        <second>0</second>
+        <minute>0</minute>
+        <hour>10</hour>
+        <info>Scan Started</info>
+    </scheduler>
+    <scanResources>
+        <share>//video.campus/Video/series/!title/C/Californication [Блудливая Калифорния] (2007-)[series]/</share>
+        <share>//video.campus/Video/series/!title/H/House M.D. [Доктор Хаус] (2004-)[series]/</share>
+        <share>//video.campus/Video/series/!title/L/Lie to Me [Обмани меня] (2009-)[series]/</share>
+        <share>//video.campus/Video/series/!title/T/The Big Bang Theory [Теория большого взрыва] (2007-)[series]/</share>
+        <share>//video.campus/video/series/!title/H/How I Met Your Mother [Как я встретил вашу маму] (2005-)[series]/</share>
+        <share>//video.campus/video/series/!title/D/Dexter [Правосудие Декстера] (2006-)[series]/</share>
+    </scanResources>
+</properties>

@@ -4,11 +4,9 @@ import java.io.Closeable;
 import java.lang.reflect.Method;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.LogManager;
 
 /**
  * Util class simplifying IO operations<br/>
- * <font color='red'>WARNING: untested yet</font>
  * @author Spitty
  */
 public class IOTools
@@ -20,9 +18,7 @@ public class IOTools
      * Private constructor. It prevents one from creating instance of {@link IOTools}
      */
     private IOTools()
-
     {
-        
     }
 
     /**
@@ -39,10 +35,12 @@ public class IOTools
             {
                 resource.close();
             }
-        }
-        catch (Exception ex)
+        } catch (Exception ex)
         {
-            LOG.error("Can't close the resource", ex);
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Can't close the resource", ex);
+            }
         }
     }
 
@@ -60,12 +58,18 @@ public class IOTools
             {
                 return;
             }
-            final Method closeMethod = resource.getClass().getMethod("close", new Class[]{});
-            closeMethod.invoke(resource, new Object[]{});
-        }
-        catch (Exception ex)
+            final Method closeMethod = resource.getClass().getMethod("close", new Class[]
+                    {
+                    });
+            closeMethod.invoke(resource, new Object[]
+                    {
+                    });
+        } catch (Exception ex)
         {
-            LOG.error("Can't close the resource", ex);
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Can't close the resource", ex);
+            }
         }
     }
 }
