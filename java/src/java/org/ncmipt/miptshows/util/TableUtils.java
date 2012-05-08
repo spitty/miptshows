@@ -1,5 +1,6 @@
 package org.ncmipt.miptshows.util;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -105,6 +106,7 @@ public class TableUtils
      */
     public static List<String> getPathes(String showTitle, String ruTitle, int season, int episode, DBUtils dbUtils)
     {
+
         List<String> pathes = new ArrayList<String>();
         String query =
                 "SELECT DISTINCT fol.folder_name, f.file_name "
@@ -112,18 +114,40 @@ public class TableUtils
                 + "WHERE f2f.file_id = f.file_id "
                 + "AND f2f.folder_id = fol.folder_id "
                 + "AND f.file_name LIKE "
-                + "''||regexp_replace(lower('" + showTitle + "'),'[^a-zа-яё0-9]+','%')||'%s'||lpad(" + season + ", 2, '0')||'%e'||lpad(" + episode + ", 2, '0')||'%' "
+                + "''||regexp_replace(lower( ? ),'[^a-zа-яё0-9]+','%')||'%s'||lpad( ? , 2, '0')||'%e'||lpad( ? , 2, '0')||'%' "
                 + "OR f.file_name LIKE "
-                + "''||regexp_replace(lower('" + showTitle + "'),'[^a-zа-яё0-9]+','%')||'%'||" + season + "||'x'||lpad(" + episode + ", 2, '0')||'%' "
+                + "''||regexp_replace(lower( ? ),'[^a-zа-яё0-9]+','%')||'%'||?||'x'||lpad( ? , 2, '0')||'%' "
                 + "OR f.file_name LIKE "
-                + "''||regexp_replace(lower('" + showTitle + "'),'[^a-zа-яё0-9]+','%')||'%'||" + season + "||''||lpad(" + episode + ", 2, '0')||'%' ";
-
-        ResultSet result = dbUtils.executeQuery(query);
+                + "''||regexp_replace(lower( ? ),'[^a-zа-яё0-9]+','%')||'%'||?||''||lpad( ? , 2, '0')||'%' ";
+        ResultSet result = null;
+        PreparedStatement stat = null;
+        try
+        {
+            stat = dbUtils.getConn().prepareStatement(query);
+            stat.setString(1, showTitle);
+            stat.setInt(2, season);
+            stat.setInt(3, episode);
+            stat.setString(4, showTitle);
+            stat.setInt(5, season);
+            stat.setInt(6, episode);
+            stat.setString(7, showTitle);
+            stat.setInt(8, season);
+            stat.setInt(9, episode);
+            result = stat.executeQuery();
+        } catch (SQLException ex)
+        {
+            if (LOG.isErrorEnabled())
+            {
+                LOG.error("Can't create prepared statement", ex);
+            }
+        }
         if (result == null)
         {
             try
             {
+
                 result.close();
+                stat.close();
             } catch (Throwable th)
             {
                 if (LOG.isFatalEnabled())
