@@ -4,9 +4,8 @@
  */
 package testing;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import org.ncmipt.miptshows.db.CookiesChecker;
+import java.util.Comparator;
+import org.ncmipt.miptshows.api.entities.Episode;
 
 /**
  *
@@ -15,10 +14,8 @@ import org.ncmipt.miptshows.db.CookiesChecker;
 public class CookiesCheckerTester
 {
 
-    public static void main(String[] args) throws SQLException
+    public static void main(String[] args)
     {
-
-
 //        CookiesChecker checker = new CookiesChecker();
 //        checker.CookiesChecker();
 //        checker.insertNewUserIntoBase("dubovS", "1231");
@@ -30,5 +27,9 @@ public class CookiesCheckerTester
 //        System.out.println(isExist);
 //        StringBuilder sb = new StringBuilder("smb://ANALIT");
 //        System.out.println(sb.replace(0, 3, "file"));
+//
+//        List<Show> list = new ArrayList<Show>();
+//        Show sh1 = new Show();
+//        sh1.setTitle("sh1");
     }
 }
