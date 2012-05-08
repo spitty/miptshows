@@ -1,7 +1,8 @@
-
 package org.ncmipt.miptshows;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,6 +26,40 @@ public class ListOfShowsChanger
     private static final String LATER = "later";
     private static final String CANCELLED = "cancelled";
     private static final String REMOVE = "remove";
+    static final Comparator<Episode> ORDER = new Comparator<Episode>()
+    {
+
+        @Override
+        public int compare(Episode o1, Episode o2)
+        {
+            int firstSeason = o1.getSeasonNumber();
+            int firstEpisode = o1.getEpisodeNumber();
+
+            int secondSeason = o2.getSeasonNumber();
+            int secondEpisode = o2.getEpisodeNumber();
+
+
+            if (firstSeason > secondSeason)
+            {
+                return 1;
+            }
+            if (firstSeason < secondSeason)
+            {
+                return -1;
+            }
+            if (firstSeason == secondSeason)
+            {
+                if (firstEpisode > secondEpisode)
+                {
+                    return 1;
+                } else
+                {
+                    return -1;
+                }
+            }
+            return 0;
+        }
+    };
 
     /**
      * This function adds in each show its unwatched episodes
@@ -44,6 +79,10 @@ public class ListOfShowsChanger
                     show.getListOfUnwathedEpisodes().add(ep);
                 }
             }
+        }
+        for (Show show : shows)
+        {
+            Collections.sort(show.getListOfUnwathedEpisodes(), ORDER);
         }
         return shows;
     }
@@ -84,6 +123,7 @@ public class ListOfShowsChanger
 
         }
         List<List<Show>> typeList = new ArrayList<List<Show>>();
+
         typeList.add(listOfWatchingShows);
         typeList.add(listOfLaterShows);
         typeList.add(listOfRemoveShows);

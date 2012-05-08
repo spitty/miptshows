@@ -34,6 +34,7 @@ tbody{
 }
 .image{
     height: 150px;
+    margin: 0 auto 0 auto;
 }
 .showText{
     font-size: 14px;

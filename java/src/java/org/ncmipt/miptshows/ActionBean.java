@@ -1,6 +1,7 @@
 package org.ncmipt.miptshows;
 
 import java.io.IOException;
+import java.io.Serializable;
 import org.ncmipt.miptshows.api.ConnectionManager;
 import org.ncmipt.miptshows.api.JsonConverter;
 import java.util.List;
@@ -22,7 +23,7 @@ import javax.faces.event.AjaxBehaviorEvent;
  */
 @ManagedBean
 @SessionScoped
-public class ActionBean
+public class ActionBean implements Serializable
 {
     
     private static final org.apache.log4j.Logger LOG = LogManager.getLogger(ActionBean.class);
@@ -386,20 +387,20 @@ public class ActionBean
         
         if (firstSeason > secondSeason)
         {
-            return 1;
+            return -1;
         }
         if (firstSeason < secondSeason)
         {
-            return -1;
+            return 1;
         }
         if (firstSeason == secondSeason)
         {
             if (firstEpisode > secondEpisode)
             {
-                return 1;
+                return -1;
             } else
             {
-                return -1;
+                return 1;
             }
         }
         return 0;
