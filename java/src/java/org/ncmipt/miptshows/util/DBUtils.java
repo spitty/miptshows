@@ -29,7 +29,7 @@ public class DBUtils implements Closeable
     private static final Log LOG = LogFactory.getLog(DBUtils.class);
 
     /**
-     * Constructor of DBUtils class. It executes connection to DB and keeps result
+     * Constructor of DBUtils class. It opens connection to DB and keeps result
      */
     public DBUtils()
     {
@@ -58,8 +58,8 @@ public class DBUtils implements Closeable
     }
 
     /**
-     *
-     * @return
+     * Create prepared statement for insertion
+     * @return a ready prepared statement
      */
     public PreparedStatement createStatement()
     {
@@ -79,8 +79,8 @@ public class DBUtils implements Closeable
     }
 
     /**
-     *
-     * @param pstat
+     * Execute a pool of insertions in prepared statement
+     * @param pstat - a prepared statement with a pool of insertions
      * @return
      */
     public int[] flush(PreparedStatement pstat)
@@ -100,7 +100,7 @@ public class DBUtils implements Closeable
     }
 
     /**
-     *
+     * Execute the query
      * @param query
      * @return
      */
@@ -129,9 +129,9 @@ public class DBUtils implements Closeable
     }
 
     /**
-     *
+     * Execute search in data base
      * @param query
-     * @return
+     * @return ResultSet
      */
     public ResultSet executeQuery(String query)
     {
@@ -152,7 +152,7 @@ public class DBUtils implements Closeable
     }
 
     /**
-     *
+     * Execute the query
      * @param query
      */
     public void execute(final String query)
