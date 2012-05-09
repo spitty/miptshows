@@ -20,7 +20,7 @@ public class SchedulerBean
 
     private static final Log LOG = LogFactory.getLog(SchedulerBean.class);
 
-    @Schedule(second = "0", minute = "13", hour = "01", persistent = false, info = "START SCANNING")
+    @Schedule(second = "0", minute = "41", hour = "20", persistent = false, info = "START SCANNING")
     public void timer()
     {
         try
@@ -28,7 +28,7 @@ public class SchedulerBean
             List<String> shares = PropertiesManager.getResourcesShare();
             if (LOG.isInfoEnabled())
             {
-                LOG.info("SHEDULER STARTS SCAN SHARES" + shares.get(0));
+                LOG.info("SHEDULER STARTS SCAN SHARES: " + shares.get(0));
             }
             for (String share : shares)
             {

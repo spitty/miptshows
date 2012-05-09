@@ -2,9 +2,11 @@ package org.ncmipt.miptshows;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Collection;
 import org.ncmipt.miptshows.api.ConnectionManager;
 import org.ncmipt.miptshows.api.JsonConverter;
 import java.util.List;
+import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -16,6 +18,11 @@ import org.ncmipt.miptshows.api.entities.TopShow;
 import org.ncmipt.miptshows.properties.PropertiesManager;
 import org.primefaces.event.RateEvent;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.servlet.http.Cookie;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.cookie.BasicClientCookie;
 
 /**
  *
@@ -44,7 +51,6 @@ public class ActionBean implements Serializable
     private ConnectionManager handler;
     private List<Episode> ep;
 
-    //// Block of setters and getters ////
     public List<Episode> getEp()
     {
         return ep;
@@ -55,6 +61,7 @@ public class ActionBean implements Serializable
         this.ep = ep;
     }
 
+    /********************** Block of setters and getters ***********************/
     public String getApplicationName()
     {
         return applicationName;
@@ -180,7 +187,7 @@ public class ActionBean implements Serializable
         this.viewedSeries = viewedSeries;
     }
 
-    //// End of the block setters and getters ////
+    /************************** End of the block setters and getters *****************************/
     public ActionBean()
     {
     }
@@ -297,7 +304,7 @@ public class ActionBean implements Serializable
 
     /**
      * This function change rate of chosen show
-     * @param rateEvent
+     * @param rateEvent 
      */
     public void manageShowRate(RateEvent rateEvent)
     {
@@ -315,8 +322,8 @@ public class ActionBean implements Serializable
     }
 
     /**
-     *
-     * @param rateEvent
+     * 
+     * @param rateEvent 
      */
     public void manageEpisodeRate(RateEvent rateEvent)
     {
@@ -336,7 +343,7 @@ public class ActionBean implements Serializable
 
     /**
      * checkEpisode function marks episode as watched
-     * @param event
+     * @param event 
      */
     public void checkEpisode(AjaxBehaviorEvent event)
     {
@@ -371,7 +378,7 @@ public class ActionBean implements Serializable
      * This function for sorting List of Episodes
      * @param firstObj
      * @param secondObj
-     * @return
+     * @return 
      */
     public int mySort(Object firstObj, Object secondObj)
     {
@@ -419,7 +426,7 @@ public class ActionBean implements Serializable
     String redirectTo = "";
     String userLogin = loginCookie.getValue();
     String userPassw = passwCookie.getValue();
-
+    
     boolean isExist = checker.isUserExistInBase(userLogin, userPassw);
     if (isExist)
     {
@@ -429,7 +436,7 @@ public class ActionBean implements Serializable
     this.password = userPassw;
     redirectTo = "actions";
     FacesContext.getCurrentInstance().getExternalContext().dispatch(redirectTo);
-
+    
     } catch (IOException ex)
     {
     LOG.error("can't redirect to actions.xhtml", ex);
@@ -445,4 +452,47 @@ public class ActionBean implements Serializable
     }
     }
     }*/
+    public String cookie = "";
+
+    public String getCookie()
+    {
+        return cookie;
+    }
+
+    //Method is not completed yet. In developing now
+    public String cookies()
+    {
+//        StringBuilder sb = new StringBuilder();
+//        Map<String, Object> requestCookieMap = FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap();
+//        String servName = FacesContext.getCurrentInstance().getExternalContext().getRequestServerName();
+//        String conttype = FacesContext.getCurrentInstance().getExternalContext().getResponseContentType();
+//        String remUser = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+//        String path = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+//        String scheme = FacesContext.getCurrentInstance().getExternalContext().getRequestScheme();
+//        Collection<Object> coll = requestCookieMap.values();
+//        System.out.println(coll.size());
+//
+//
+////        HttpClient client = new DefaultHttpClient();
+////        BasicClientCookie stdCookie = new BasicClientCookie("name", "vlad");
+////        FacesContext.getCurrentInstance().getExternalContext().setR
+//        Cookie userIdCookie = new Cookie("userId", " 123");
+//        Cookie passwordCookie = new Cookie("password", "eeevlad");
+//        Cookie rememberMeCookie = new Cookie("rememberMe", "true");
+//
+//        for (Object o : coll)
+//        {
+//            sb.append(o.toString());
+////            System.out.println(o.toString());
+//        }
+//        System.out.println(servName);
+//        System.out.println(conttype);
+//        System.out.println(remUser);
+//        System.out.println(path);
+//        System.out.println(scheme);
+//        cookie = servName;
+//        //return sb.toString();
+//        return servName;
+        return "";
+    }
 }
