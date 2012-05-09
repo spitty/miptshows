@@ -20,7 +20,7 @@ public class JsonConverter
 
     /**
      * This function parse JSON as input string <b>text</b> and make list of Shows from it
-     * 
+     *
      * @param text
      * @return
      */
@@ -33,11 +33,11 @@ public class JsonConverter
         Map<String, Show> map = gson.fromJson(text, typeOfT);
 
         List<Show> list = new ArrayList<Show>();
-
         for (String st : map.keySet())
         {
             list.add(map.get(st));
         }
+
         return list;
     }
 
@@ -59,7 +59,7 @@ public class JsonConverter
     /**
      * This function parse JSON as input string <b>text</b> and make list of Episodes from it
      * @param text
-     * @return 
+     * @return
      */
     public static List<Episode> mapToEpisodes(String text)
     {
@@ -68,6 +68,7 @@ public class JsonConverter
         {
         }.getType();
         Map<String, Episode> map = gson.fromJson(text, typeOfT);
+        
         List<Episode> episodes = new ArrayList<Episode>();
         for (String st : map.keySet())
         {
@@ -75,6 +76,4 @@ public class JsonConverter
         }
         return episodes;
     }
-    //TODO: create json-handler of viewed series
-    //TODO: create json-handler of user info
 }

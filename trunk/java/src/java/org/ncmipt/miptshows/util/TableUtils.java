@@ -18,8 +18,8 @@ public class TableUtils
     private static final Log LOG = LogFactory.getLog(TableUtils.class);
 
     /**
-     *
-     * @param dbUtils
+     * Merge a temporary table and constant tables
+     * @param dbUtils - provide a connection for work
      */
     public static void merge(DBUtils dbUtils)
     {
@@ -88,8 +88,8 @@ public class TableUtils
     }
 
     /**
-     *
-     * @param dbUtils
+     * Clear a temporary table
+     * @param dbUtils - provide a connection for work
      */
     public static void clearTempTable(DBUtils dbUtils)
     {
@@ -97,12 +97,13 @@ public class TableUtils
     }
 
     /**
-     *
-     * @param showTitle
-     * @param ruTitle
-     * @param season
-     * @param episode
-     * @return
+     * Execute searching pathes in constant tables
+     * @param showTitle - the title of the show with a required seria
+     * @param ruTitle - a russian-language title
+     * @param season - a season which contains a required seria
+     * @param episode - a required seria
+     * @param dbUtils - provide a connection for work
+     * @return list of string containing pathes to required serias
      */
     public static List<String> getPathes(String showTitle, String ruTitle, int season, int episode, DBUtils dbUtils)
     {
@@ -119,8 +120,10 @@ public class TableUtils
                 + "''||regexp_replace(lower( ? ),'[^a-zа-яё0-9]+','%')||'%'||?||'x'||lpad( ? , 2, '0')||'%' "
                 + "OR f.file_name LIKE "
                 + "''||regexp_replace(lower( ? ),'[^a-zа-яё0-9]+','%')||'%'||?||''||lpad( ? , 2, '0')||'%' ";
+
         ResultSet result = null;
         PreparedStatement stat = null;
+
         try
         {
             stat = dbUtils.getConn().prepareStatement(query);
@@ -134,6 +137,7 @@ public class TableUtils
             stat.setInt(8, season);
             stat.setInt(9, episode);
             result = stat.executeQuery();
+
         } catch (SQLException ex)
         {
             if (LOG.isErrorEnabled())
@@ -141,6 +145,7 @@ public class TableUtils
                 LOG.error("Can't create prepared statement", ex);
             }
         }
+
         if (result == null)
         {
             try
@@ -188,8 +193,8 @@ public class TableUtils
     }
 
     /**
-     *
-     * @param dbUtils
+     * Delete old files
+     * @param dbUtils - provide a connection for work
      * @param rate - the rate of deleting files.
      */
     public static void clearOldFiles(DBUtils dbUtils, double rate)
@@ -200,8 +205,8 @@ public class TableUtils
     }
 
     /**
-     *
-     * @param dbUtils
+     * Delete empty folders
+     * @param dbUtils - provide a connection for work
      */
     public static void clearEmptyFolders(DBUtils dbUtils)
     {

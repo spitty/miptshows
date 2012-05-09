@@ -26,8 +26,11 @@ public class Updater
     private static final Log LOG = LogFactory.getLog(Updater.class);
 
     /**
-     *
-     * @param share
+     * Keep data base in up-to-date form. Add new items from te directory with
+     * name share into DB. Use @see ConnectionManager for the recursive
+     * traversal of the tree with handler @see FileFindHandlerDB. Then merge
+     * into constant tables and clear the temporary table.
+     * @param share - the name of scanned share
      */
     public static void updateDB(String share)
     {
@@ -65,6 +68,7 @@ public class Updater
             // It must retransmit the data from a temporary table to conctant tables and clear temptable
             TableUtils.merge(dbUtils);
             TableUtils.clearTempTable(dbUtils);
+
             if (LOG.isDebugEnabled())
             {
                 LOG.debug("SHARE WAS SCANNED Updater");
@@ -76,19 +80,21 @@ public class Updater
             {
                 LOG.error("Smth wrong with DB", e);
             }
+
         } catch (MalformedURLException e)
         {
             if (LOG.isErrorEnabled())
             {
                 LOG.error("Smth wrong with DB", e);
             }
+
         } finally
         {
-            // TODO google: try with resources
             dbUtils.close();
             try
             {
                 pstat.close();
+
             } catch (SQLException ex)
             {
                 Logger.getLogger(Updater.class.getName()).log(Level.SEVERE, null, ex);

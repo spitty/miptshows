@@ -18,8 +18,8 @@ public class PropertiesManager
     private static final Log LOG = LogFactory.getLog(PropertiesManager.class);
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public static String getSchedulerExpression()
     {
@@ -36,8 +36,8 @@ public class PropertiesManager
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public static String getApplicationName()
     {
@@ -54,8 +54,8 @@ public class PropertiesManager
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public static List<String> getResourcesShare()
     {
@@ -82,8 +82,8 @@ public class PropertiesManager
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public static double getDeletingRate()
     {
@@ -100,8 +100,8 @@ public class PropertiesManager
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public static String getJNDIDataSourceName()
     {
@@ -119,8 +119,8 @@ public class PropertiesManager
 
     /****future*****/
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public static String getSchedulerMinute()
     {
@@ -137,8 +137,8 @@ public class PropertiesManager
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public static String getSchedulerHour()
     {
@@ -155,8 +155,8 @@ public class PropertiesManager
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public static String getSchedulerInfo()
     {
@@ -174,7 +174,8 @@ public class PropertiesManager
 
     /***********/
     /**
-     * @return 
+     * @return
+     * @deprecated
      */
     @Deprecated
     public static String getDatabaseDriver()
@@ -192,8 +193,9 @@ public class PropertiesManager
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
+     * @deprecated
      */
     @Deprecated
     public static String getDatabaseUserName()
@@ -211,8 +213,9 @@ public class PropertiesManager
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
+     * @deprecated
      */
     @Deprecated
     public static String getDatabaseUserPassword()
@@ -230,8 +233,9 @@ public class PropertiesManager
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
+     * @deprecated 
      */
     @Deprecated
     public static String getDatabaseURL()

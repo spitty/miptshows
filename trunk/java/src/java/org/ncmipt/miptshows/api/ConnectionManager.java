@@ -51,14 +51,14 @@ public class ConnectionManager
     }
 
     /**
-     * This function make authorization and return code 
+     * This function make authorization and return code
      * which shows is authorization succeed or failed.
      * Also it creates the single HttpClient
      *
      * @param login    User login for authorization
      * @param password User password for authorization
      * @return         Server response status code
-     * @throws NullPointerException 
+     * @throws NullPointerException
      */
     public int getAuthorization(String login, String password) throws NullPointerException
     {
@@ -112,11 +112,10 @@ public class ConnectionManager
         return sb.toString();
     }
 
-    //try to realize list of existing functions from api.myshows.ru
     /**
-     * 
+     *
      * @param showId
-     * @return 
+     * @return
      */
     public String getListOfViewedSeries(int showId)
     {
@@ -139,9 +138,9 @@ public class ConnectionManager
 
     /**
      * This function sets the value of rate for chosen show identified by show id
-     * 
+     *
      * @param showId id of chosen show
-     * @param rate 
+     * @param rate
      */
     public void manageShowRate(String showId, int rate)
     {
@@ -161,7 +160,7 @@ public class ConnectionManager
     /**
      * This function sets the value of rate for chosen show identified by episode id
      * @param episodeId id of chosen episode
-     * @param rate 
+     * @param rate
      */
     public void manageEpisodeRate(String episodeId, int rate)
     {
@@ -178,13 +177,12 @@ public class ConnectionManager
     }
 
     /**
-     * 
+     *
      * @param episodeId
-     * @param rate 
      */
     public void checkEpisode(String episodeId)
     {
-        //http://api.myshows.ru/profile/episodes/check/291461 
+        //http://api.myshows.ru/profile/episodes/check/291461
         String host = "http://api.myshows.ru/profile/episodes/check/" + episodeId;
         HttpPost httpPost = new HttpPost(host);
         try
@@ -197,8 +195,8 @@ public class ConnectionManager
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public String showTopAllShows()
     {
@@ -220,9 +218,9 @@ public class ConnectionManager
     }
 
     /**
-     * 
+     *
      * @param login
-     * @return 
+     * @return
      */
     public String getUserInfo(String login)
     {
@@ -244,8 +242,8 @@ public class ConnectionManager
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public String getUnwatchedEpisodes()
     {
@@ -265,22 +263,4 @@ public class ConnectionManager
         }
         return sb.toString();
     }
-    //     public String mmmSeries(int episode)
-//    {
-//        HttpPost httpPost = new HttpPost(HOST + PROFILE + SHOWS +"3/"+ episode + '/');
-//        StringBuilder sb = new StringBuilder("");
-//        try
-//        {
-//            HttpResponse response = httpClient.execute(httpPost);
-//            Scanner scanner = new Scanner(response.getEntity().getContent(), "UTF-8");
-//            while (scanner.hasNextLine())
-//            {
-//                sb.append(scanner.nextLine());
-//            }
-//        } catch (IOException ex)
-//        {
-//            LOG.error("Failed to create server response", ex);
-//        }
-//        return sb.toString();
-//    }
 }

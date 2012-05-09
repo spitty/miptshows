@@ -23,7 +23,9 @@ public class FileFindHandlerDB implements FileFindHandler
     }
 
     /**
-     *
+     * The constructor of FileFindHandlerDB. Initialized by prapered statement
+     * and set internal counter into 0 (used for prepared statement - in case of
+     * reaching INSERTION_MAX execute flush and again is set by 0).
      * @param pstat
      */
     public FileFindHandlerDB(PreparedStatement pstat)
@@ -42,7 +44,7 @@ public class FileFindHandlerDB implements FileFindHandler
             pstat.setInt(3, file.getSize());
             pstat.setString(4, file.getServer());
             pstat.addBatch();
-            
+
             if (++insertionCounter <= INSERTION_MAX)
             {
                 pstat.executeBatch();
