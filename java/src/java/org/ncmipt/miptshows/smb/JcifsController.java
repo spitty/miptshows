@@ -63,6 +63,7 @@ public class JcifsController
      */
     public static void scanFolder(final SmbFile smbFile, final FileFindHandler handler)
     {
+        System.out.println(smbFile.getCanonicalPath());
         if (smbFile == null)
         {
             throw new IllegalArgumentException("SmbFile can't be null");
@@ -80,11 +81,13 @@ public class JcifsController
             }
             if (smbFile.isFile())
             {
+                //System.out.println(smbFile.getPath());
                 handler.onFileFound(new FileObject(smbFile.getName(), smbFile.getParent(),
                         smbFile.getServer(), smbFile.getContentLength()));
 
             } else if (smbFile.isDirectory())
             {
+//                System.out.println(smbFile.getCanonicalPath());
                 final SmbFile files[] = smbFile.listFiles();
                 for (SmbFile file : files)
                 {

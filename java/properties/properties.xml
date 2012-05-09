@@ -16,11 +16,11 @@
         <info>Scan Started</info>
     </scheduler>
     <scanResources>
-        <share>//video.campus/Video/series/!title/</share>
-<!--        <share>//video.campus/Video/series/!title/H/House M.D. [Доктор Хаус] (2004-)[series]/</share>
-        <share>//video.campus/Video/series/!title/L/Lie to Me [Обмани меня] (2009-)[series]/</share>
-        <share>//video.campus/Video/series/!title/T/The Big Bang Theory [Теория большого взрыва] (2007-)[series]/</share>
-        <share>//video.campus/video/series/!title/H/How I Met Your Mother [Как я встретил вашу маму] (2005-)[series]/</share>
-        <share>//video.campus/video/series/!title/D/Dexter [Правосудие Декстера] (2006-)[series]/</share>-->
+<!--        <share>//video.campus/Video/series/!title/H/</share>-->
+        <share>//video.campus/Video/series/!title/H/House M.D. [Доктор Хаус] (2004-)[series]/</share>
+<!--        <share>//video.campus/Video/series/!title/L/</share>-->
+<!--        <share>//video.campus/Video/series/!title/T/</share>-->
+<!--        <share>//video.campus/video/series/!title/H/</share>-->
+<!--        <share>//video.campus/video/series/!title/D/</share>-->
     </scanResources>
 </properties>
