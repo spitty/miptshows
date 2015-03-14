@@ -1,0 +1,1 @@
+This software product is intended to simplify the process of finding tv-series on the local smb-resources.
